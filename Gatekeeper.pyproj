@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>e087db03-1aa1-47c8-91b4-8710a092f64f</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>runserver.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <OutputPath>.</OutputPath>
+    <StaticUriPattern>^/static/.*</StaticUriPattern>
+    <StaticUriRewrite>^/$(MSBuildProjectName)/static/.*</StaticUriRewrite>
+    <PythonWsgiHandler>$(MSBuildProjectName).app</PythonWsgiHandler>
+    <Name>Gatekeeper</Name>
+    <RootNamespace>Gatekeeper</RootNamespace>
+    <InterpreterId>{df76253e-8605-4e7a-946f-6951c17f8398}</InterpreterId>
+    <InterpreterVersion>3.4</InterpreterVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="runserver.py" />
+    <Compile Include="Gatekeeper\__init__.py" />
+    <Compile Include="Gatekeeper\views.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Gatekeeper\" />
+    <Folder Include="Gatekeeper\static\" />
+    <Folder Include="Gatekeeper\static\content\" />
+    <Folder Include="Gatekeeper\static\fonts\" />
+    <Folder Include="Gatekeeper\static\scripts\" />
+    <Folder Include="Gatekeeper\templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
+    <Content Include="Gatekeeper\static\content\bootstrap.css" />
+    <Content Include="Gatekeeper\static\content\bootstrap.min.css" />
+    <Content Include="Gatekeeper\static\content\site.css" />
+    <Content Include="Gatekeeper\static\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Gatekeeper\static\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Gatekeeper\static\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Gatekeeper\static\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Gatekeeper\static\scripts\bootstrap.js" />
+    <Content Include="Gatekeeper\static\scripts\bootstrap.min.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery-1.10.2.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery-1.10.2.min.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery-1.10.2.min.map" />
+    <Content Include="Gatekeeper\static\scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery.validate.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery.validate.min.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Gatekeeper\static\scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Gatekeeper\static\scripts\modernizr-2.6.2.js" />
+    <Content Include="Gatekeeper\static\scripts\respond.js" />
+    <Content Include="Gatekeeper\static\scripts\respond.min.js" />
+    <Content Include="Gatekeeper\static\scripts\_references.js" />
+    <Content Include="Gatekeeper\templates\about.html" />
+    <Content Include="Gatekeeper\templates\contact.html" />
+    <Content Include="Gatekeeper\templates\index.html" />
+    <Content Include="Gatekeeper\templates\layout.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>{df76253e-8605-4e7a-946f-6951c17f8398}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>3.4</Version>
+      <Description>env (Python 3.4)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X86</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
