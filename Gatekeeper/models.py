@@ -1,0 +1,49 @@
+﻿class Animal(object):
+    """description of Animal goes here"""
+
+    import itertools
+
+    _counter = itertools.count().__next__
+    _sizeRange = ['Small','Medium','Large']
+    _sex = ['Male','Female']
+    _ageRange = ['Baby','Young','Adult','Senior']
+
+    def __init__(self):
+        self.id = str(Animal._counter()).rjust(6, '0')
+        self.name = ''
+        self.age = 0
+        self.ageRange = '' #_ageRange[0]
+        self.size = '' #_sizeRange[0]
+        self.weight = 0
+        self.sex = '' #_sex[0]
+
+    def __repr__(self):
+        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
+        return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
+
+    def to_json_dict(self, *fields):
+        if fields:
+            return {'animal': {str(field): getattr(self, field) for field in fields}}
+        else:
+            return {'animal': self.__dict__}
+            
+class Dog(Animal):
+    """description of Dog goes here"""
+
+    _group = ['Hearding','Hound','NonSporting','Sporting','Terrier','Toy','Working','FoundationStockService','Miscellaneous']
+
+    def __init__(self):
+        super().__init__()
+        self.breed = ''
+        self.group = '' #_group[0]
+        self.color = ''
+
+    def __repr__(self):
+        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
+        return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
+
+    def to_json_dict(self, *fields):
+        if fields:
+            return {'dog': {str(field): getattr(self, field) for field in fields}}
+        else:
+            return {'dog': self.__dict__}
