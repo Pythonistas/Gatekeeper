@@ -30,9 +30,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Gatekeeper\data.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Gatekeeper\models.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
