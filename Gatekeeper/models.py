@@ -22,10 +22,13 @@
         return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
 
     def to_json_dict(self, *fields):
-        if fields:
-            return {'animal': {str(field): getattr(self, field) for field in fields}}
-        else:
-            return {'animal': self.__dict__}
+        try:
+            if fields:
+                return {str(self.__class__.__name__).lower(): {str(field): getattr(self, field) for field in fields}}
+            else:
+                return {str(self.__class__.__name__).lower(): self.__dict__}
+        except AttributeError:
+            return {str(self.__class__.__name__).lower(): self.__dict__}
             
 class Dog(Animal):
     """description of Dog goes here"""
@@ -37,13 +40,3 @@ class Dog(Animal):
         self.breed = ''
         self.group = '' #_group[0]
         self.color = ''
-
-    def __repr__(self):
-        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
-        return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
-
-    def to_json_dict(self, *fields):
-        if fields:
-            return {'dog': {str(field): getattr(self, field) for field in fields}}
-        else:
-            return {'dog': self.__dict__}
