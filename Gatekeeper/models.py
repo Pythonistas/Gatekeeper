@@ -19,7 +19,7 @@
 
     def __repr__(self):
         _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
-        return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
+        return '{0}({1})'.format(self.__class__.__name__, ', '.join(_result))
 
     def to_json_dict(self, *fields):
         """
