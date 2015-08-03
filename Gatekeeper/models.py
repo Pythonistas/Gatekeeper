@@ -28,9 +28,9 @@
         """
 
         if fields:
-            return {str(self.__class__.__name__).lower(): {str(field): getattr(self, field) for field in fields}}
+            return {self.__class__.__name__.lower(): {str(field): getattr(self, field) for field in fields}}
         else:
-            return {str(self.__class__.__name__).lower(): self.__dict__}
+            return {self.__class__.__name__.lower(): self.__dict__}
             
 class Dog(Animal):
     """description of Dog goes here"""
