@@ -22,12 +22,14 @@
         return str(self.__class__.__name__) + '(' + ', '.join(_result) + ')'
 
     def to_json_dict(self, *fields):
-        try:
-            if fields:
-                return {str(self.__class__.__name__).lower(): {str(field): getattr(self, field) for field in fields}}
-            else:
-                return {str(self.__class__.__name__).lower(): self.__dict__}
-        except AttributeError:
+        """
+        Returns a dictionary of properties, limited to those specified in fields, 
+        or all public fields if fields is not specified.
+        """
+
+        if fields:
+            return {str(self.__class__.__name__).lower(): {str(field): getattr(self, field) for field in fields}}
+        else:
             return {str(self.__class__.__name__).lower(): self.__dict__}
             
 class Dog(Animal):
