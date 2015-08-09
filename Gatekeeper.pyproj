@@ -18,7 +18,7 @@
     <PythonWsgiHandler>$(MSBuildProjectName).app</PythonWsgiHandler>
     <Name>Gatekeeper</Name>
     <RootNamespace>Gatekeeper</RootNamespace>
-    <InterpreterId>{df76253e-8605-4e7a-946f-6951c17f8398}</InterpreterId>
+    <InterpreterId>{8b289870-c45b-4ef8-a79e-86ce95ef92c6}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -30,12 +30,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Gatekeeper\model\animal.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gatekeeper\model\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gatekeeper\" />
+    <Folder Include="Gatekeeper\model\" />
     <Folder Include="Gatekeeper\static\" />
     <Folder Include="Gatekeeper\static\content\" />
     <Folder Include="Gatekeeper\static\fonts\" />
@@ -43,6 +50,7 @@
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dogs.yaml" />
     <Content Include="requirements.txt" />
     <Content Include="Gatekeeper\static\content\bootstrap.css" />
     <Content Include="Gatekeeper\static\content\bootstrap.min.css" />
@@ -73,15 +81,15 @@
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
-      <Id>{df76253e-8605-4e7a-946f-6951c17f8398}</Id>
-      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Id>{8b289870-c45b-4ef8-a79e-86ce95ef92c6}</Id>
+      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
       <Version>3.4</Version>
-      <Description>env (Python 3.4)</Description>
+      <Description>env (Python 64-bit 3.4)</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <LibraryPath>Lib\</LibraryPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X86</Architecture>
+      <Architecture>Amd64</Architecture>
     </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

@@ -1,10 +1,11 @@
-"""
+﻿"""
 Routes and views for the flask application.
 """
 
 from datetime import datetime
-from flask import render_template
+from flask import render_template, jsonify
 from Gatekeeper import app
+from Gatekeeper.model import animal
 
 
 @app.route('/')
@@ -17,6 +18,12 @@ def home():
         year=datetime.now().year,
     )
 
+@app.route('/api/dogs')
+def dogs():
+    """Renders a list of dogs"""
+    all_dogs = animal.load_from_yaml()
+    return jsonify(dogs=[cur_dog.to_json_dict('name', 'age', 'breed') for cur_dog in all_dogs])
+    #return jsonify(dogs=[cur_dog.to_json_dict() for cur_dog in all_dogs])
 
 @app.route('/contact')
 def contact():
