@@ -5,7 +5,7 @@ from flask import request
 from datetime import datetime
 
 
-api = Api(app)
+api = Api(app, prefix='/api/v1')
 
 
 class Animal(Resource):
@@ -32,4 +32,4 @@ class Dog(Animal):
         self.breed = 'bison'
         self.birth_date = datetime.now()
 
-api.add_resource(Dog, '/api/dog/')
+api.add_resource(Dog, '/dog/')
