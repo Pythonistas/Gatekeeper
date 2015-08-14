@@ -1,6 +1,6 @@
 from Gatekeeper import app
 from flask_restful import Resource, Api
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_dump
 from flask import request
 from datetime import datetime
 
@@ -18,6 +18,11 @@ class Animal(Resource):
         name = fields.Str()
         birth_date = fields.Date()
 
+        @post_dump(raw=True)
+        def wrap_with_envelope(self, data, many):
+            key = self.get_envelope_key(many)
+            return {key: data}
+
     def get(self, object_id):
         self.object_id = object_id
 
@@ -31,6 +36,10 @@ class Dog(Animal):
     class _Schema(Animal._Schema):
         breed = fields.Str()
         url = fields.Str()
+
+        @staticmethod
+        def get_envelope_key(many):
+            return 'dogs' if many else 'dog'
 
     def __init__(self, object_id=None):
         self.object_id = object_id
@@ -52,7 +61,7 @@ class Dogs(Resource):
     def get(self):
         schema = Dog._Schema(only=fields_from_request(request), many=True)
         data, errors = schema.dump(self.dogs)
-        return errors if errors else {'dogs': data}
+        return errors if errors else data
 
 
 api.add_resource(Dog, '/dogs/<int:object_id>')
