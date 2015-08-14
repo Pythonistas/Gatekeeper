@@ -1,10 +1,12 @@
 from Gatekeeper import app
 from flask_restful import Resource, Api
-from marshmallow import Schema, fields, post_dump
+from marshmallow import post_dump
+from flask_marshmallow import Marshmallow
 from flask import request
 from datetime import datetime
 
 api = Api(app, prefix='/api/v1')
+ma = Marshmallow(app)
 
 
 def fields_from_request(request):
@@ -14,42 +16,43 @@ def fields_from_request(request):
 
 class Animal(Resource):
 
-    class _Schema(Schema):
-        name = fields.Str()
-        birth_date = fields.Date()
+    class _Schema(ma.Schema):
+        name = ma.Str()
+        birth_date = ma.DateTime()
 
         @post_dump(raw=True)
         def wrap_with_envelope(self, data, many):
             key = self.get_envelope_key(many)
             return {key: data}
 
-    def get(self, object_id):
+    def __init__(self, object_id=None):
         self.object_id = object_id
+        pass
 
+    def get(self, object_id):
+        instance = self.__class__(object_id)
         schema = self._Schema(only=fields_from_request(request))
-        data, errors = schema.dump(self)
+        data, errors = schema.dump(instance)
         return errors if errors else data
 
 
 class Dog(Animal):
 
     class _Schema(Animal._Schema):
-        breed = fields.Str()
-        url = fields.Str()
+        breed = ma.Str()
+        links = ma.Hyperlinks({
+            'self': ma.AbsoluteURLFor('dog', object_id='<object_id>')
+        })
 
         @staticmethod
         def get_envelope_key(many):
             return 'dogs' if many else 'dog'
 
     def __init__(self, object_id=None):
-        self.object_id = object_id
+        super(Dog, self).__init__(object_id)
         self.name = 'fred'
         self.breed = 'bison'
         self.birth_date = datetime.now()
-
-    @property
-    def url(self):
-        return request.url
 
 
 class Dogs(Resource):
