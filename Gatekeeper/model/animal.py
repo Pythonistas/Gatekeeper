@@ -35,10 +35,13 @@ class Animal(Resource):
         pass
 
     def get(self, object_id):
-        instance = self.__class__(object_id)
+        instance = self.load(object_id)
         schema = self._Schema(only=fields_from_request(request))
         data, errors = schema.dump(instance)
         return errors if errors else data
+
+    def load(self, object_id):
+        pass
 
 
 class Dog(Animal):
@@ -66,6 +69,13 @@ class Dog(Animal):
         except OSError:
             print("File not found")
         return dogs
+
+    def load(self, dog_id):
+        try:
+            dogs = Dog.load_from_yaml()
+            return dogs[dog_id]
+        except IndexError:
+            return None
 
     class _Schema(Animal._Schema):
         breed = ma.Str()
