@@ -1,40 +1,86 @@
+﻿from Gatekeeper import app
+from flask_restful import Resource, Api
+from marshmallow import post_dump
+from flask_marshmallow import Marshmallow
+from flask import request
+from datetime import datetime
 import yaml
-import flask
+
+api = Api(app, prefix='/api/v1')
+ma = Marshmallow(app)
 
 ages    = ["puppy", "young", "adult", "senior"]
 sizes   = ["small", "medium", "large"]
 genders = ["female", "male"]
 statuses= ["unavailable", "available", "foster", "adopted", "tbpd"]
 
-def load_from_yaml():
-    dogs = []
-    try:
-        with open("dogs.yaml", 'r') as stream:
-            for data in yaml.safe_load(stream):
-                cur_dog = Dog()
-                cur_dog.name = data['name']
-                cur_dog.status = data['status']
-                cur_dog.breed = data['breed']
-                cur_dog.color = data['color']
-                cur_dog.ageRange = data['ageRange']
-                cur_dog.age = data['age']
-                cur_dog.weightRange = data['weightRange']
-                cur_dog.weight = data['weight']
-                cur_dog.gender = data['gender']
-                cur_dog.trained = data['trained']
-                dogs.append(cur_dog)
-        return dogs
-    except OSError:
-        print("File not found")
+def fields_from_request(request):
+    fields = request.args.get('fields')
+    return fields.split(',') if fields else None
 
-class Dog(object):
-    """data for individual dogs"""
 
-    def __init__(self):
-        self._id = 0
-        self.name = ""
+class Animal(Resource):
+
+    class _Schema(ma.Schema):
+        name = ma.Str()
+        birth_date = ma.DateTime()
+
+        @post_dump(raw=True)
+        def wrap_with_envelope(self, data, many):
+            key = self.get_envelope_key(many)
+            return {key: data}
+
+    def __init__(self, object_id=None):
+        self.object_id = object_id
+        pass
+
+    def get(self, object_id):
+        instance = self.__class__(object_id)
+        schema = self._Schema(only=fields_from_request(request))
+        data, errors = schema.dump(instance)
+        return errors if errors else data
+
+
+class Dog(Animal):
+
+    @staticmethod
+    def load_from_yaml():
+        dogs = []
+        try:
+            with open("dogs.yaml", 'r') as stream:
+                for data in yaml.safe_load(stream):
+                    cur_dog = Dog()
+                    cur_dog.name = data['name']
+                    cur_dog.status = data['status']
+                    cur_dog.breed = data['breed']
+                    cur_dog.color = data['color']
+                    cur_dog.ageRange = data['ageRange']
+                    cur_dog.age = data['age']
+                    cur_dog.weightRange = data['weightRange']
+                    cur_dog.weight = data['weight']
+                    cur_dog.gender = data['gender']
+                    cur_dog.trained = data['trained']
+                    dogs.append(cur_dog)
+            return dogs
+        except OSError:
+            print("File not found")
+
+    class _Schema(Animal._Schema):
+        breed = ma.Str()
+        links = ma.Hyperlinks({
+            'self': ma.AbsoluteURLFor('dog', object_id='<object_id>')
+        })
+
+        @staticmethod
+        def get_envelope_key(many):
+            return 'dogs' if many else 'dog'
+
+    def __init__(self, object_id=None):
+        super(Dog, self).__init__(object_id)
+        self.name = 'fred'
+        self.breed = 'bison'
+        self.birth_date = datetime.now()
         self.status = ""
-        self.breed = ""
         self.color = ""
         self.ageRange = ""
         self.age = 0
@@ -49,23 +95,17 @@ class Dog(object):
         self.links = {}
         self.metadata = {}
 
-    def to_json_dict(self, *fields):
-        if (len(fields) > 0):
-            filtered_dog = {}
-            for field in fields:
-                try:
-                    filtered_dog[field] = getattr(self, field)
-                except AttributeError:
-                    print("Attribute not found")
-            return filtered_dog 
-        else:
-            return {'name' : getattr(self, 'name'), 
-                    'status': getattr(self,'status'),
-                    'breed': getattr(self,'breed'),
-                    'color': getattr(self,'color'),
-                    'ageRange': getattr(self,'ageRange'),
-                    'age': getattr(self,'age'),
-                    'weightRange': getattr(self,'weightRange'),
-                    'weight': getattr(self,'weight'),
-                    'gender': getattr(self,'gender')
-                   }
+class Dogs(Resource):
+
+    @property
+    def dogs(self):
+        return [Dog(i) for i in range(5)]
+
+    def get(self):
+        schema = Dog._Schema(only=fields_from_request(request), many=True)
+        data, errors = schema.dump(self.dogs)
+        return errors if errors else data
+
+
+api.add_resource(Dog, '/dogs/<int:object_id>')
+api.add_resource(Dogs, '/dogs/')

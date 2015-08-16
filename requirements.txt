@@ -1,2 +1,6 @@
 Flask<1
 PyYAML
+Flask-RESTful
+marshmallow>=2.0.0b4
+flask-marshmallow
+python-dateutil
