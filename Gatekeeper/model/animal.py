@@ -46,10 +46,11 @@ class Dog(Animal):
     @staticmethod
     def load_from_yaml():
         dogs = []
+        dog_id = 0
         try:
             with open("dogs.yaml", 'r') as stream:
                 for data in yaml.safe_load(stream):
-                    cur_dog = Dog()
+                    cur_dog = Dog(dog_id)
                     cur_dog.name = data['name']
                     cur_dog.status = data['status']
                     cur_dog.breed = data['breed']
@@ -61,9 +62,10 @@ class Dog(Animal):
                     cur_dog.gender = data['gender']
                     cur_dog.trained = data['trained']
                     dogs.append(cur_dog)
-            return dogs
+                    dog_id += 1
         except OSError:
             print("File not found")
+        return dogs
 
     class _Schema(Animal._Schema):
         breed = ma.Str()
@@ -77,9 +79,9 @@ class Dog(Animal):
 
     def __init__(self, object_id=None):
         super(Dog, self).__init__(object_id)
-        self.name = 'fred'
-        self.breed = 'bison'
         self.birth_date = datetime.now()
+        self.name = ""
+        self.breed = ""
         self.status = ""
         self.color = ""
         self.ageRange = ""
@@ -99,7 +101,7 @@ class Dogs(Resource):
 
     @property
     def dogs(self):
-        return [Dog(i) for i in range(5)]
+        return Dog.load_from_yaml()
 
     def get(self):
         schema = Dog._Schema(only=fields_from_request(request), many=True)
