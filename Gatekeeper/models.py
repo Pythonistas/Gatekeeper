@@ -1,59 +1,64 @@
 ﻿from Gatekeeper import app
 from flask_restful import Resource, Api
-from marshmallow import Schema, fields, post_dump
+from marshmallow import post_dump
+from flask_marshmallow import Marshmallow
 from flask import request
+from datetime import datetime
+import yaml
 
 
 api = Api(app, prefix='/api/latest')
+ma = Marshmallow(app)
+
+
+def fields_from_request(request):
+    fields = request.args.get('fields')
+    return ma.split(',') if fields else None
 
 
 class Animal(Resource):
     """description of Animal goes here"""
 
-    _sex = ['Male','Female']
+    _gender = ['Male','Female']
 
+    class _Schema(ma.Schema):
 
-    class _Schema(Schema):
-        
         class Meta: ordered = True
 
-        id = fields.Int()
-        name = fields.Str()
-        age = fields.Int()
-        weight = fields.Int()
-        sex = fields.Str()
+        id = ma.Int(attribute='object_id')
+        name = ma.Str()
+        age = ma.Int()
+        weight = ma.Int()
+        gender = ma.Str()
 
+        @post_dump(raw=True)
+        def wrap_with_envelope(self, data, many):
+            key = self.get_envelope_key(many)
+            return {key: data}
 
-    def __init__(self):
-        self.id = 0
-        self.name = ''
-        self.age = 0
-        self.weight = 0
-        self.sex = '' #_sex[0]
+    def __init__(self,
+            object_id = None,
+            name = '',
+            age = 0,
+            weight = 0,
+            gender = ''
+        ):
+        self.object_id = object_id
+        self.name = name
+        self.age = age
+        self.weight = weight
+        self.gender = gender
 
-
-    def get(self):
-        fields = request.args.get('fields')
-        fields_list = fields.split(',') if fields else None
-        schema = self._Schema(only=fields_list)
-        data, errors = schema.dump(self)
+    def get(self, object_id):
+        instance = self.__class__(object_id)
+        schema = self._Schema(only=fields_from_request(request))
+        data, errors = schema.dump(instance)
         return errors if errors else data
 
-    #def __repr__(self):
-    #    _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
-    #    return '<{0}({1})>'.format(self.__class__.__name__, ', '.join(_result))
+    def load(self, object_id):
+        pass
 
-    #def to_json_dict(self, *fields):
-    #    """
-    #    Returns a dictionary of properties, limited to those specified in fields, 
-    #    or all public fields if fields is not specified.
-    #    """
 
-    #    if fields:
-    #        return {self.__class__.__name__.lower(): {str(field): getattr(self, field) for field in fields}}
-    #    else:
-    #        return {self.__class__.__name__.lower(): self.__dict__}
-            
 class Dog(Animal):
     """description of Dog goes here"""
 
@@ -64,70 +69,94 @@ class Dog(Animal):
     _size_range = ['Small','Medium','Large']
     _status = ['Unavailable', 'Available', 'Foster', 'Adopted', 'TBPD']
 
+    class _Schema_Good_With(ma.Schema):
+        children = ma.Bool()
+        dogs = ma.Bool()
+        cats = ma.Bool()
 
-    class _Schema_Good_With(Schema):
-                        
+    class _Schema_Metadata(ma.Schema):
+        created = ma.DateTime()
+        updated = ma.DateTime()
+
+    class _Schema_Links(ma.Schema):
+
         class Meta: ordered = True
 
-        children = fields.Bool()
-        dogs = fields.Bool()
-        cats = fields.Bool()
-
-
-    class _Schema_Links(Schema):
-                        
-        class Meta: ordered = True
-
-        href = fields.Url('dog')
-        rel = fields.Str()
-        method = fields.Str()
-
-
-    class _Schema_Metadata(Schema):
-                        
-        class Meta: ordered = True
-
-        created = fields.DateTime()
-        updated = fields.DateTime()
-
+        href = ma.AbsoluteURLFor('dog', object_id='<object_id>')
+        rel = ma.Str()
+        method = ma.Str()
 
     class _Schema(Animal._Schema):
+        ageRange = ma.Str(attribute='age_range')
+        sizeRange = ma.Str(attribute='size_range')
+        status = ma.Str()
+        breed = ma.Str()
+        group = ma.Str()
+        color = ma.Str()
+        goodWith = ma.Nested('_Schema_Good_With', attribute='good_with')
+        trained = ma.Bool()
+        notes = ma.Str()
+        links = ma.Nested('_Schema_Links')
+        metadata = ma.Nested('_Schema_Metadata')
 
-        age_range = fields.Str()
-        size_range = fields.Str()
-        status = fields.Str()
-        breed = fields.Str()
-        group = fields.Str()
-        color = fields.Str()
-        good_with = fields.Nested('_Schema_Good_With')
-        trained = fields.Bool()
-        notes = fields.Str()
-        links = fields.Nested('_Schema_Links', many=True)
-        metadata = fields.Nested('_Schema_Metadata')
+        @staticmethod
+        def get_envelope_key(many):
+            return 'dogs' if many else 'dog'
 
-        # Add an envelope to responses
-        @post_dump(raw=True)
-        def wrap(self, data, many):
-            key = 'dogs' if many else 'dog'
-            return { key: data }
-
-    def __init__(self):
+    def __init__(self,
+            object_id = None,
+            name = '',
+            age = 0,
+            weight = 0,
+            gender = '',
+            age_range = '', #_age_range[0]
+            size_range = '', #_size_range[0]
+            status = '',
+            breed = '',
+            group = '', #_group[0]
+            color = '',
+            good_with = {'children': False, 'dogs': False, 'cats': False},
+            trained = False,
+            notes = '',
+        ):
 
         _time = self.datetime.utcnow().replace(microsecond = 0)
 
-        super().__init__()
-        self.age_range = '' #_age_range[0]
-        self.size_range = '' #_size_range[0]
-        self.status = ''
-        self.breed = ''
-        self.group = '' #_group[0]
-        self.color = ''
-        self.good_with = {'children': False, 'dogs': False, 'cats': False}
-        self.trained = False
-        self.notes = ''
-        self.links = [{'href': None, 'rel': 'self', 'method': 'GET'}, {'href': None, 'rel': 'edit', 'method': 'PUT'}, {'href': None, 'rel': 'delete', 'method': 'DELETE'}]
+        super(Dog, self).__init__(object_id, name, age, weight, gender)
+        self.age_range = age_range
+        self.size_range = size_range
+        self.status = status
+        self.breed = breed
+        self.group = group
+        self.color = color
+        self.good_with = good_with
+        self.trained = trained
+        self.notes = notes
+        self.links = {'object_id': object_id, 'rel': 'self', 'method': 'GET'}
         self.metadata = {'created': _time, 'updated': _time}
 
+    def __repr__(self):
+        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
+        return '<{0}({1})>'.format(self.__class__.__name__, ', '.join(_result))
 
-api.add_resource(Dog, '/dogs/<id>', endpoint='dog')
-api.add_resource(Dog, '/dogs/', endpoint='dogs')
+    def load(self, object_id):
+        pass
+
+class Dogs(Resource):
+    """description of Dogs goes here"""
+
+    @property
+    def dogs(self):
+        return [Dog(i) for i in range(5)]
+
+    def get(self):
+        schema = Dog._Schema(only=fields_from_request(request), many=True)
+        data, errors = schema.dump(self.dogs)
+        return errors if errors else data
+
+    def load(self):
+        pass
+
+
+api.add_resource(Dog, '/dogs/<int:object_id>')
+api.add_resource(Dogs, '/dogs/')
