@@ -11,6 +11,25 @@ api = Api(app, prefix='/api/latest')
 ma = Marshmallow(app)
 
 
+# For YAML
+# ==============================================================================
+_DOGS = []
+
+def import_dogs_from_YAML():
+    if not _DOGS:
+        try:
+            with open('data.yaml','r') as stream:
+                for dog in yaml.safe_load_all(stream):
+                    _new_dog = Dog()
+
+                    for key, value in dog.items():
+                        setattr(_new_dog, key, value)
+
+                    _DOGS.append(_new_dog)
+        except OSError:
+            print('Error: Cannot read from specified YAML file...')
+
+
 def fields_from_request(request):
     fields = request.args.get('fields')
     return ma.split(',') if fields else None
@@ -49,8 +68,12 @@ class Animal(Resource):
         self.weight = weight
         self.gender = gender
 
+    def __repr__(self):
+        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
+        return '<{0}({1})>'.format(self.__class__.__name__, ', '.join(_result))
+
     def get(self, object_id):
-        instance = self.__class__(object_id)
+        instance = self.load(object_id)
         schema = self._Schema(only=fields_from_request(request))
         data, errors = schema.dump(instance)
         return errors if errors else data
@@ -78,13 +101,18 @@ class Dog(Animal):
         created = ma.DateTime()
         updated = ma.DateTime()
 
-    class _Schema_Links(ma.Schema):
+    #class _Schema_Link(ma.Schema):
 
-        class Meta: ordered = True
+    #    class Meta: ordered = True
 
-        href = ma.AbsoluteURLFor('dog', object_id='<object_id>')
-        rel = ma.Str()
-        method = ma.Str()
+    #    href = ma.Url()
+    #    rel = ma.Str()
+    #    method = ma.Str()
+
+    #class _Schema_Links_Self(_Schema_Link):
+    #    href = ma.AbsoluteURLFor('dog', object_id='<object_id>')
+    #    rel = ma.Str()
+    #    method = ma.Str()
 
     class _Schema(Animal._Schema):
         ageRange = ma.Str(attribute='age_range')
@@ -96,7 +124,11 @@ class Dog(Animal):
         goodWith = ma.Nested('_Schema_Good_With', attribute='good_with')
         trained = ma.Bool()
         notes = ma.Str()
-        links = ma.Nested('_Schema_Links')
+        links = ma.Hyperlinks({
+            'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': "GET"},
+            'owners': {'url': ma.AbsoluteURLFor('dog_owners', object_id='<object_id>'), 'method': "GET"}
+        })
+        #links = ma.Nested('_Schema_Links_Self', many=True)
         metadata = ma.Nested('_Schema_Metadata')
 
         @staticmethod
@@ -132,31 +164,39 @@ class Dog(Animal):
         self.good_with = good_with
         self.trained = trained
         self.notes = notes
-        self.links = {'object_id': object_id, 'rel': 'self', 'method': 'GET'}
+        #self.links = [
+        #    {'object_id': object_id, 'rel': 'self', 'method': 'GET'},
+        #    {'object_id': object_id, 'rel': 'update', 'method': 'PUT'},
+        #    {'object_id': object_id, 'rel': 'delete', 'method': 'DELETE'},
+        #    {'object_id': object_id, 'rel': 'owners', 'method': 'GET'},
+        #    {'object_id': object_id, 'rel': 'images', 'method': 'GET'}
+        #]
         self.metadata = {'created': _time, 'updated': _time}
 
-    def __repr__(self):
-        _result = [("{key}='{value}'".format(key=key, value=self.__dict__[key])) for key in self.__dict__]
-        return '<{0}({1})>'.format(self.__class__.__name__, ', '.join(_result))
-
     def load(self, object_id):
-        pass
+        import_dogs_from_YAML()
+        try:
+            return [d for d in _DOGS if d.object_id == object_id][0]
+        except IndexError:
+            return None
+
 
 class Dogs(Resource):
     """description of Dogs goes here"""
 
-    @property
-    def dogs(self):
-        return [Dog(i) for i in range(5)]
-
     def get(self):
+        instance = self.load()
         schema = Dog._Schema(only=fields_from_request(request), many=True)
-        data, errors = schema.dump(self.dogs)
+        data, errors = schema.dump(instance)
         return errors if errors else data
 
     def load(self):
-        pass
-
+        import_dogs_from_YAML()
+        try:
+            return _DOGS
+        except:
+            return None
 
 api.add_resource(Dog, '/dogs/<int:object_id>')
+api.add_resource(Dog, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
 api.add_resource(Dogs, '/dogs/')

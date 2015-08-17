@@ -45,6 +45,7 @@
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data.yaml" />
     <Content Include="requirements.txt" />
     <Content Include="Gatekeeper\static\content\bootstrap.css" />
     <Content Include="Gatekeeper\static\content\bootstrap.min.css" />
