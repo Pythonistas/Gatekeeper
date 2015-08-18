@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 from flask import request
 from datetime import datetime
 import yaml
+from random import randint
 
 
 api = Api(app, prefix='/api/latest')
@@ -25,6 +26,8 @@ def import_dogs_from_YAML():
                     for key, value in dog.items():
                         setattr(_new_dog, key, value)
 
+                    _new_dog.primary_image_id = randint(100, 1000)
+
                     _DOGS.append(_new_dog)
         except OSError:
             print('Error: Cannot read from specified YAML file...')
@@ -44,7 +47,7 @@ class Animal(Resource):
 
         class Meta: ordered = True
 
-        id = ma.Int(attribute='object_id')
+        #id = ma.Int(attribute='object_id')
         name = ma.Str()
         age = ma.Int()
         weight = ma.Int()
@@ -92,6 +95,12 @@ class Dog(Animal):
     _size_range = ['Small','Medium','Large']
     _status = ['Unavailable', 'Available', 'Foster', 'Adopted', 'TBPD']
 
+    class Owners(Resource):
+        pass
+
+    class Images(Resource):
+        pass
+
     class _Schema_Good_With(ma.Schema):
         children = ma.Bool()
         dogs = ma.Bool()
@@ -100,8 +109,8 @@ class Dog(Animal):
     class _Schema_Metadata(ma.Schema):
         created = ma.DateTime()
         updated = ma.DateTime()
-
-    #class _Schema_Link(ma.Schema):
+    
+    #class _Schema_Link(ma.Schema): #2
 
     #    class Meta: ordered = True
 
@@ -109,7 +118,7 @@ class Dog(Animal):
     #    rel = ma.Str()
     #    method = ma.Str()
 
-    #class _Schema_Links_Self(_Schema_Link):
+    #class _Schema_Links_Self(_Schema_Link): #2
     #    href = ma.AbsoluteURLFor('dog', object_id='<object_id>')
     #    rel = ma.Str()
     #    method = ma.Str()
@@ -125,10 +134,18 @@ class Dog(Animal):
         trained = ma.Bool()
         notes = ma.Str()
         links = ma.Hyperlinks({
-            'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': "GET"},
-            'owners': {'url': ma.AbsoluteURLFor('dog_owners', object_id='<object_id>'), 'method': "GET"}
+            'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'GET'},
+            'owners': {'url': ma.AbsoluteURLFor('dog_owners', object_id='<object_id>'), 'method': 'GET'},
+            'images': {'url': ma.AbsoluteURLFor('dog_images', object_id='<object_id>'), 'method': 'GET'}
         })
-        #links = ma.Nested('_Schema_Links_Self', many=True)
+        #links = ma.Nested('_Schema_Links_Self', many=True) #2
+        primaryImages = ma.Hyperlinks({
+            'xsmall': {'url': ma.AbsoluteURLFor('images', object_id='<primary_image_id>', size='xsmall'), 'method': 'GET'},
+            'small': {'url': ma.AbsoluteURLFor('images', object_id='<primary_image_id>', size='small'), 'method': 'GET'},
+            'medium':{'url': ma.AbsoluteURLFor('images', object_id='<primary_image_id>', size='medium'), 'method': 'GET'},
+            'large': {'url': ma.AbsoluteURLFor('images', object_id='<primary_image_id>', size='large'), 'method': 'GET'}
+        })
+
         metadata = ma.Nested('_Schema_Metadata')
 
         @staticmethod
@@ -149,7 +166,7 @@ class Dog(Animal):
             color = '',
             good_with = {'children': False, 'dogs': False, 'cats': False},
             trained = False,
-            notes = '',
+            notes = ''
         ):
 
         _time = self.datetime.utcnow().replace(microsecond = 0)
@@ -170,8 +187,9 @@ class Dog(Animal):
         #    {'object_id': object_id, 'rel': 'delete', 'method': 'DELETE'},
         #    {'object_id': object_id, 'rel': 'owners', 'method': 'GET'},
         #    {'object_id': object_id, 'rel': 'images', 'method': 'GET'}
-        #]
+        #] #2
         self.metadata = {'created': _time, 'updated': _time}
+        self._primary_image_id = 0
 
     def load(self, object_id):
         import_dogs_from_YAML()
@@ -179,6 +197,14 @@ class Dog(Animal):
             return [d for d in _DOGS if d.object_id == object_id][0]
         except IndexError:
             return None
+
+    @property
+    def primary_image_id(self):
+        return self._primary_image_id
+
+    @primary_image_id.setter
+    def primary_image_id(self, value):
+        self._primary_image_id = value
 
 
 class Dogs(Resource):
@@ -197,6 +223,13 @@ class Dogs(Resource):
         except:
             return None
 
-api.add_resource(Dog, '/dogs/<int:object_id>')
-api.add_resource(Dog, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
+
+class Images(Resource):
+    pass
+
+
 api.add_resource(Dogs, '/dogs/')
+api.add_resource(Dog, '/dogs/<int:object_id>')
+api.add_resource(Dog.Owners, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
+api.add_resource(Dog.Images, '/dogs/<int:object_id>/images', endpoint='dog_images')
+api.add_resource(Images, '/images/<int:object_id>/')
