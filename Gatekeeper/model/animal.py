@@ -25,7 +25,7 @@ class Animal(Resource):
             key = self.get_envelope_key(many)
             return {key: data}
 
-    def __init__(self, object_id=None):
+    def __init__(self, object_id):
         self.object_id = object_id
         pass
 
@@ -48,7 +48,7 @@ class Dog(Animal):
         def get_envelope_key(many):
             return 'dogs' if many else 'dog'
 
-    def __init__(self, object_id=None):
+    def __init__(self, object_id):
         super(Dog, self).__init__(object_id)
         self.name = None
         self.breed = None
@@ -67,5 +67,6 @@ class Dogs(Resource):
         return errors if errors else data
 
 
-api.add_resource(Dog, '/dogs/<int:object_id>')
+api.add_resource(
+    Dog, '/dogs/<int:object_id>', resource_class_args={'object_id': None})
 api.add_resource(Dogs, '/dogs/')
