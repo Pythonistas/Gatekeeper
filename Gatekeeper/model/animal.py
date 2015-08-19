@@ -59,9 +59,9 @@ class Dog(Animal):
             return 'dogs' if many else 'dog'
 
     def __init__(self):
-        super(Dog, self).__init__()
+        super().__init__()
         self.breed = None
-        self.birth_date = datetime.now()
+        self.birth_date = None
         self.status = None
         self.color = None
         self.ageRange = None
@@ -87,33 +87,21 @@ class Dogs(Resource):
 
     @staticmethod
     def load_from_yaml():
-        dogs = []
-        dog_id = 0
+        dogs = {}
         try:
             with open("dogs.yaml", 'r') as stream:
                 for data in yaml.safe_load(stream):
                     cur_dog = Dog()
-                    cur_dog.object_id = dog_id
-                    cur_dog.name = data['name']
-                    cur_dog.status = data['status']
-                    cur_dog.breed = data['breed']
-                    cur_dog.color = data['color']
-                    cur_dog.ageRange = data['ageRange']
-                    cur_dog.age = data['age']
-                    cur_dog.weightRange = data['weightRange']
-                    cur_dog.weight = data['weight']
-                    cur_dog.gender = data['gender']
-                    cur_dog.trained = data['trained']
-                    dogs.append(cur_dog)
-                    dog_id += 1
+                    for key, value in data.items():
+                        setattr(cur_dog, key, value)
+                    dogs[cur_dog.object_id] = cur_dog
         except OSError:
-            print("File not found")
             return None
         return dogs
 
     @property
     def dogs(self):
-        return Dogs.load_from_yaml()
+        return Dogs.load_from_yaml().values()
 
     def get(self):
         schema = Dog._Schema(only=fields_from_request(request), many=True)
