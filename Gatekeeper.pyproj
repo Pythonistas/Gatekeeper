@@ -31,13 +31,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Gatekeeper\models.py" />
+    <Compile Include="Gatekeeper\model\animal.py" />
+    <Compile Include="Gatekeeper\model\__init__.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gatekeeper\" />
+    <Folder Include="Gatekeeper\model\" />
     <Folder Include="Gatekeeper\static\" />
     <Folder Include="Gatekeeper\static\content\" />
     <Folder Include="Gatekeeper\static\fonts\" />

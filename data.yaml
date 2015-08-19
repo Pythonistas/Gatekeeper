@@ -3,13 +3,13 @@ object_id: 5
 name: 'Odie'
 age: 4
 weight: 8
-gender: 'Male'
-age_range: 'Young'
-size_range: 'Small'
-status: 'Unavailable'
-breed: 'Imaginary'
-group: 'Toy'
-color: 'White'
+gender: 'male'
+age_range: 'young'
+size_range: 'small'
+status: 'unavailable'
+breed: 'imaginary'
+group: 'toy'
+color: 'white'
 good_with:
     children: true
     dogs: true
@@ -21,13 +21,13 @@ object_id: 1
 name: 'Ghost'
 age: 6
 weight: 200
-gender: 'Male'
-age_range: 'Young'
-size_range: 'Large'
-status: 'Unavailable'
-breed: 'Direwolf'
-group: 'Miscellaneous'
-color: 'White'
+gender: 'male'
+age_range: 'young'
+size_range: 'large'
+status: 'unavailable'
+breed: 'direwolf'
+group: 'miscellaneous'
+color: 'white'
 good_with:
     children: false
     dogs: false
@@ -39,13 +39,13 @@ object_id: 2
 name: 'Rin Tin Tin'
 age: 6
 weight: 75
-gender: 'Male'
-age_range: 'Adult'
-size_range: 'Large'
-status: 'Adopted'
-breed: 'German Shephard'
-group: 'Hearding'
-color: 'Tan and Black'
+gender: 'male'
+age_range: 'adult'
+size_range: 'large'
+status: 'adopted'
+breed: 'german shephard'
+group: 'hearding'
+color: 'tan and black'
 good_with:
     children: true
     dogs: true
@@ -57,13 +57,13 @@ object_id: 3
 name: Toto
 age: 2
 weight: 10
-gender: 'Male'
-age_range: 'Young'
-size_range: 'Small'
-status: 'Available'
-breed: 'Cairn Terrier'
-group: 'Terrier'
-color: 'Wheaten'
+gender: 'male'
+age_range: 'young'
+size_range: 'small'
+status: 'available'
+breed: 'cairn terrier'
+group: 'terrier'
+color: 'wheaten'
 good_with:
     children: true
     dogs: true
