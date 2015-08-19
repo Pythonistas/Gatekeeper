@@ -1,0 +1,73 @@
+---
+object_id: 5
+name: 'Odie'
+age: 4
+weight: 8
+gender: 'male'
+age_range: 'young'
+size_range: 'small'
+status: 'unavailable'
+breed: 'imaginary'
+group: 'toy'
+color: 'white'
+good_with:
+    children: true
+    dogs: true
+    cats: true
+trained: true
+notes: 'Likes to lick'
+---
+object_id: 1
+name: 'Ghost'
+age: 6
+weight: 200
+gender: 'male'
+age_range: 'young'
+size_range: 'large'
+status: 'unavailable'
+breed: 'direwolf'
+group: 'miscellaneous'
+color: 'white'
+good_with:
+    children: false
+    dogs: false
+    cats: false
+trained: false
+notes: 'Friendly only to John Snow and members of house Stark'
+---
+object_id: 2
+name: 'Rin Tin Tin'
+age: 6
+weight: 75
+gender: 'male'
+age_range: 'adult'
+size_range: 'large'
+status: 'adopted'
+breed: 'german shephard'
+group: 'hearding'
+color: 'tan and black'
+good_with:
+    children: true
+    dogs: true
+    cats: true
+trained: true
+notes: ''
+---
+object_id: 3
+name: Toto
+age: 2
+weight: 10
+gender: 'male'
+age_range: 'young'
+size_range: 'small'
+status: 'available'
+breed: 'cairn terrier'
+group: 'terrier'
+color: 'wheaten'
+good_with:
+    children: true
+    dogs: true
+    cats: true
+trained: true
+notes: ''
+...
