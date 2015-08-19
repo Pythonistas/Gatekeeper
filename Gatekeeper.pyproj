@@ -20,6 +20,7 @@
     <RootNamespace>Gatekeeper</RootNamespace>
     <InterpreterId>{df76253e-8605-4e7a-946f-6951c17f8398}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
+    <WebBrowserPort>5555</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Gatekeeper\models.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
@@ -43,6 +45,7 @@
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data.yaml" />
     <Content Include="requirements.txt" />
     <Content Include="Gatekeeper\static\content\bootstrap.css" />
     <Content Include="Gatekeeper\static\content\bootstrap.min.css" />
