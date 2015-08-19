@@ -1,0 +1,27 @@
+- name: Bruce
+  status: available
+  breed: Rottweiler
+  color: Black
+  ageRange: Adult
+  age: 6
+  weightRange: Large
+  weight: 80
+  gender: Male
+  goodWith: Children
+  trained: True
+  notes: Needs plenty of exercise
+  owners: John Doe
+
+- name: Fiona
+  status: adopted
+  breed: Poodle
+  color: Apricot
+  ageRange: Young
+  age: 2
+  weightRange: Small
+  weight: 10
+  gender: Female
+  goodWith: Cats
+  trained: True
+  notes:
+  owners: Lily Landon
