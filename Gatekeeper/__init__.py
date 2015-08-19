@@ -10,4 +10,4 @@ app.config['ERROR_404_HELP'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 import Gatekeeper.views
-import Gatekeeper.models
+import Gatekeeper.model.animal
