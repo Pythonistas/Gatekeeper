@@ -50,8 +50,8 @@ class Dog(Animal):
 
     def __init__(self, object_id=None):
         super(Dog, self).__init__(object_id)
-        self.name = 'fred'
-        self.breed = 'bison'
+        self.name = None
+        self.breed = None
         self.birth_date = datetime.now()
 
 
