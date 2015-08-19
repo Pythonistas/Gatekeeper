@@ -158,7 +158,6 @@ class Dogs(Resource):
         return Dogs.load_from_yaml().values()
 
     def get(self):
-        #exclude = ['primaryImages'] if self.image_primary is None else None
         schema = Dog.ModelView(only=fields_from_request(request), many=True)
         data, errors = schema.dump(self.dogs)
         return errors if errors else data
