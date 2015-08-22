@@ -31,13 +31,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Gatekeeper\models.py" />
+    <Compile Include="Gatekeeper\model\animal.py" />
+    <Compile Include="Gatekeeper\model\image.py" />
+    <Compile Include="Gatekeeper\model\owner.py" />
+    <Compile Include="Gatekeeper\model\__init__.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gatekeeper\" />
+    <Folder Include="Gatekeeper\model\" />
+    <Folder Include="Gatekeeper\model\__pycache__\" />
     <Folder Include="Gatekeeper\static\" />
     <Folder Include="Gatekeeper\static\content\" />
     <Folder Include="Gatekeeper\static\fonts\" />
@@ -46,6 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="data.yaml" />
+    <Content Include="Gatekeeper\model\__pycache__\animal.cpython-34.pyc" />
+    <Content Include="Gatekeeper\model\__pycache__\dog.cpython-34.pyc" />
+    <Content Include="Gatekeeper\model\__pycache__\image.cpython-34.pyc" />
+    <Content Include="Gatekeeper\model\__pycache__\owner.cpython-34.pyc" />
+    <Content Include="Gatekeeper\model\__pycache__\util.cpython-34.pyc" />
+    <Content Include="Gatekeeper\model\__pycache__\__init__.cpython-34.pyc" />
     <Content Include="requirements.txt" />
     <Content Include="Gatekeeper\static\content\bootstrap.css" />
     <Content Include="Gatekeeper\static\content\bootstrap.min.css" />
