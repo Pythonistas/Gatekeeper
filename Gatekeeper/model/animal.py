@@ -23,7 +23,6 @@ class Animal(Resource):
         name = ma.Str()
         birthDate = ma.DateTime(attribute='birthdate')
         birthDateExact = ma.Bool(attribute='birthdate_exact')
-        ageRange = ma.Str(attribute='age_range')
         sizeRange = ma.Str(attribute='size_range')
         weight = ma.Float()
         gender = ma.Str()
@@ -63,7 +62,6 @@ class Animal(Resource):
         self.birthdate = None
         self.birthdate_exact = False
         #self.tags = [] # new feature (v2)
-        self.age_range = None # constrained list
         self.size_range = None # constrained list
         self.weight = None # free form
         self.gender = None # constrained list
@@ -100,6 +98,7 @@ class Animal(Resource):
 class Dog(Animal):
 
     class ModelView(Animal.ModelView):
+        ageRange = ma.Str(attribute='age_range')
         trained = ma.Bool()
         links = ma.Hyperlinks({
             'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'GET'},
@@ -115,6 +114,7 @@ class Dog(Animal):
 
     def __init__(self):
         super().__init__()
+        self.age_range = None # constrained list
         self.trained = False # bool
 
     class Owners(Resource):
