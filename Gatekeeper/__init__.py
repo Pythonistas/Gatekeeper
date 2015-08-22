@@ -9,10 +9,7 @@ from Gatekeeper import gatekeeper_config
 
 app = Flask(__name__)
 
-if 'CONFIG_MODE' in environ:
-    app.config.from_object(eval(gatekeeper_config.config_dict[environ['CONFIG_MODE']]))
-else:
-    app.config.from_object(eval(gatekeeper_config.config_dict['DEFAULT']))
+app.config.from_object(gatekeeper_config.config_dict[environ.get('CONFIG_MODE', 'DEFAULT')])
 
 import Gatekeeper.views
 import Gatekeeper.model.animal

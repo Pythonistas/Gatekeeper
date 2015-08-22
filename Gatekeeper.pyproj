@@ -21,6 +21,11 @@
     <InterpreterId>{df76253e-8605-4e7a-946f-6951c17f8398}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
     <WebBrowserPort>5555</WebBrowserPort>
+    <Environment>
+    </Environment>
+    <PythonRunWebServerCommandEnvironment>
+    </PythonRunWebServerCommandEnvironment>
+    <PythonDebugWebServerCommandEnvironment>CONFIG_MODE=DEBUG</PythonDebugWebServerCommandEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +36,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Gatekeeper\gatekeeper_config.py" />
     <Compile Include="Gatekeeper\model\animal.py" />
     <Compile Include="Gatekeeper\model\image.py" />
     <Compile Include="Gatekeeper\model\owner.py" />
