@@ -12,7 +12,6 @@ from Gatekeeper.model.owner import Owner, Owners
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
 
-ages = ["puppy", "young", "adult", "senior"]
 sizes = ["small", "medium", "large"]
 genders = ["female", "male"]
 statuses = ["unavailable", "available", "foster", "adopted", "tbpd"]
@@ -21,6 +20,7 @@ class Animal(Resource):
 
     class ModelView(ma.Schema):
         name = ma.Str()
+        ageRange = ma.Str(attribute='age_range')
         birthDate = ma.DateTime(attribute='birthdate')
         birthDateExact = ma.Bool(attribute='birthdate_exact')
         sizeRange = ma.Str(attribute='size_range')
@@ -30,6 +30,7 @@ class Animal(Resource):
         breed = ma.Str()
         group = ma.Str()
         color = ma.Str()
+        trained = ma.Bool()
         goodWith = ma.Nested('Good_With', attribute='good_with')
         notes = ma.Str()
         primaryImages = ma.Hyperlinks({
@@ -96,10 +97,9 @@ class Animal(Resource):
 
 
 class Dog(Animal):
+    ages = ["puppy", "young", "adult", "senior"]
 
     class ModelView(Animal.ModelView):
-        ageRange = ma.Str(attribute='age_range')
-        trained = ma.Bool()
         links = ma.Hyperlinks({
             'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'GET'},
             'update': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'PUT'},
