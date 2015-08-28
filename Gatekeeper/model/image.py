@@ -3,7 +3,9 @@ from flask_restful import Resource, Api
 from marshmallow import post_dump
 from flask_marshmallow import Marshmallow
 from flask import request
-import yaml
+from Gatekeeper.model.util import fields_from_request
+from Gatekeeper.model.util import load_from_yaml
+from Gatekeeper.model.namespaced_schema import NamespacedSchema
 
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
@@ -15,15 +17,10 @@ sizes = {
     'large': {'x': 48, 'y': 48},
 }
 
-# Is there a better way to share this code?
-def fields_from_request(request):
-    fields = request.args.get('fields')
-    return fields.split(',') if fields else None
-
 
 class Image(Resource):
 
-    class ModelView(ma.Schema):
+    class ModelView(NamespacedSchema):
         size = ma.Str()
         mime_Type = ma.Str()
         file_name = ma.Str()
@@ -34,14 +31,10 @@ class Image(Resource):
             'delete': {'url': ma.AbsoluteURLFor('image', object_id='<object_id>'), 'method': 'DELETE'},
         })
 
-        @staticmethod
-        def get_envelope_key(many):
-            return 'images' if many else 'image'
+        class Meta():
+            name = 'image'
+            plural_name = 'images'
 
-        @post_dump(raw=True)
-        def wrap_with_envelope(self, data, many):
-            key = self.get_envelope_key(many)
-            return {key: data}
 
     def __init__(self):
         self.object_id = None
@@ -60,7 +53,7 @@ class Image(Resource):
 
     def load(self, image_id):
         try:
-            images = Images.load_from_yaml()
+            images = load_from_yaml('images.yaml', Image)
             return images[image_id]
         except IndexError:
             return None
@@ -68,23 +61,9 @@ class Image(Resource):
 
 class Images(Resource):
 
-    @staticmethod
-    def load_from_yaml():
-        images = {}
-        try:
-            with open("images.yaml", 'r') as stream:
-                for data in yaml.safe_load(stream):
-                    cur_image = Image()
-                    for key, value in data.items():
-                        setattr(cur_image, key, value)
-                    images[cur_image.object_id] = cur_image
-        except OSError:
-            return None
-        return images
-
     @property
     def images(self):
-        return Images.load_from_yaml().values()
+        return load_from_yaml('images.yaml', Image).values()
 
     def get(self):
         schema = Image.ModelView(only=fields_from_request(request), many=True)
