@@ -1,4 +1,4 @@
-"""
+﻿"""
 Routes and views for the flask application.
 """
 
@@ -16,7 +16,6 @@ def home():
         title='Home Page',
         year=datetime.now().year,
     )
-
 
 @app.route('/contact')
 def contact():

@@ -1,4 +1,4 @@
-"""
+﻿"""
 This script runs the Gatekeeper application using a development server.
 """
 
