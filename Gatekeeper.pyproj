@@ -34,18 +34,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Gatekeeper\gatekeeper_config.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Gatekeeper\model\image.py" />
+    <Compile Include="Gatekeeper\gatekeeper_config.py" />
     <Compile Include="Gatekeeper\model\animal.py" />
-    <Compile Include="Gatekeeper\model\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Gatekeeper\model\image.py" />
     <Compile Include="Gatekeeper\model\owner.py" />
     <Compile Include="Gatekeeper\model\util.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Gatekeeper\model\__init__.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
     <Compile Include="Gatekeeper\views.py" />
