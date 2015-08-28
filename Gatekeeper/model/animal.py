@@ -1,11 +1,11 @@
 ﻿from Gatekeeper import app
 from flask_restful import Resource, Api
-from marshmallow import post_dump
 from flask_marshmallow import Marshmallow
 from flask import request
 from datetime import datetime
 
 from Gatekeeper.model.util import fields_from_request, load_from_yaml
+from Gatekeeper.model.namespaced_schema import NamespacedSchema
 from Gatekeeper.model.image import Image, Images
 from Gatekeeper.model.owner import Owner, Owners
 
@@ -18,7 +18,7 @@ statuses = ["unavailable", "available", "foster", "adopted", "tbpd"]
 
 class Animal(Resource):
 
-    class ModelView(ma.Schema):
+    class ModelView(NamespacedSchema):
         name = ma.Str()
         ageRange = ma.Str(attribute='age_range')
         birthDate = ma.DateTime(attribute='birthdate')
@@ -49,13 +49,6 @@ class Animal(Resource):
         class Metadata(ma.Schema):
             created = ma.DateTime()
             updated = ma.DateTime()
-
-        # TODO use NamespacedSchema technique instead
-        # see http://marshmallow.readthedocs.org/en/latest/extending.html#example-enveloping-revisited
-        @post_dump(raw=True)
-        def wrap_with_envelope(self, data, many):
-            key = self.get_envelope_key(many)
-            return {key: data}
 
     def __init__(self):
         self.object_id = None
@@ -108,9 +101,9 @@ class Dog(Animal):
             'images': {'url': ma.AbsoluteURLFor('dog_images', object_id='<object_id>'), 'method': 'GET'}
         })
 
-        @staticmethod
-        def get_envelope_key(many):
-            return 'dogs' if many else 'dog'
+        class Meta:
+            name = 'dog'
+            plural_name = 'dogs'
 
     def __init__(self):
         super().__init__()
