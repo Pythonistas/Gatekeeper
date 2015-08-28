@@ -21,8 +21,10 @@
     <InterpreterId>{df76253e-8605-4e7a-946f-6951c17f8398}</InterpreterId>
     <InterpreterVersion>3.4</InterpreterVersion>
     <WebBrowserPort>5555</WebBrowserPort>
-    <Environment>CONFIG_MODE=DEBUG</Environment>
-    <PythonRunWebServerCommandEnvironment>CONFIG_MODE=DEBUG</PythonRunWebServerCommandEnvironment>
+    <Environment>
+    </Environment>
+    <PythonRunWebServerCommandEnvironment>
+    </PythonRunWebServerCommandEnvironment>
     <PythonDebugWebServerCommandEnvironment>CONFIG_MODE=DEBUG</PythonDebugWebServerCommandEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
