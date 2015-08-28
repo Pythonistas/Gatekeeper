@@ -1,6 +1,6 @@
 ﻿from Gatekeeper import app
-from flask_restful import Resource, Api
-from marshmallow import post_dump
+from flask_restful import Resource
+from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask import request
 from Gatekeeper.model.util import fields_from_request
