@@ -1,0 +1,47 @@
+- object_id: 1
+  size: xsmall
+  mime_Type: image/png
+  file_name: thumbnail_xs.png
+  file_size: 11111
+
+- object_id: 2
+  size: small
+  mime_Type: image/png
+  file_name: thumbnail_s.png
+  file_size: 22222
+
+- object_id: 3
+  size: medium
+  mime_Type: image/png
+  file_name: thumbnail_m.png
+  file_size: 33333
+
+- object_id: 4
+  size: large
+  mime_Type: image/png
+  file_name: thumbnail_l.png
+  file_size: 44444
+
+- object_id: 5
+  size: large
+  mime_Type: image/png
+  file_name: jumping.png
+  file_size: 55555
+
+- object_id: 6
+  size: large
+  mime_Type: image/png
+  file_name: running.png
+  file_size: 66666
+
+- object_id: 7
+  size: large
+  mime_Type: image/png
+  file_name: climbing.png
+  file_size: 77777
+
+- object_id: 8
+  size: large
+  mime_Type: image/png
+  file_name: sleeping.png
+  file_size: 88888

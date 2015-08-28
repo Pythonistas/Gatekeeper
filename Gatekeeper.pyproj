@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Gatekeeper\model\animal.py" />
+    <Compile Include="Gatekeeper\model\image.py" />
+    <Compile Include="Gatekeeper\model\owner.py" />
     <Compile Include="Gatekeeper\model\__init__.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Gatekeeper\__init__.py" />
@@ -47,7 +49,9 @@
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data.yaml" />
+    <Content Include="dogs.yaml" />
+    <Content Include="images.yaml" />
+    <Content Include="owners.yaml" />
     <Content Include="requirements.txt" />
     <Content Include="Gatekeeper\static\content\bootstrap.css" />
     <Content Include="Gatekeeper\static\content\bootstrap.min.css" />

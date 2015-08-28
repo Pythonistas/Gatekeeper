@@ -1,0 +1,24 @@
+- object_id: 1
+  first_name: Steve
+  last_name: Rogers
+  phone_number: (805) 555-1234
+
+- object_id: 2
+  first_name: Anthony "Tony"
+  last_name: Stark
+  phone_number: (805) 555-4321
+
+- object_id: 3
+  first_name: Robert "Bruce"
+  last_name: Banner
+  phone_number: (805) 555-2143
+
+- object_id: 4
+  first_name: Henry "Hank"
+  last_name: Pym
+  phone_number: (805) 555-2413
+
+- object_id: 5
+  first_name: Janet
+  last_name: van Dyne
+  phone_number: (805) 555-1324
