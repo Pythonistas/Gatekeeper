@@ -1,22 +1,19 @@
 ﻿from Gatekeeper import app
-from flask_restful import Resource, Api
-from marshmallow import post_dump
+from flask_restful import Resource
+from flask_restful import Api
 from flask_marshmallow import Marshmallow
 from flask import request
-import yaml
+from Gatekeeper.model.util import fields_from_request
+from Gatekeeper.model.util import load_from_yaml
+from Gatekeeper.model.namespaced_schema import NamespacedSchema
 
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
 
-# Is there a better way to share this code?
-def fields_from_request(request):
-    fields = request.args.get('fields')
-    return fields.split(',') if fields else None
-
 
 class Owner(Resource):
 
-    class ModelView(ma.Schema):
+    class ModelView(NamespacedSchema):
         first_name = ma.Str()
         last_name = ma.Str()
         phone_number = ma.Str() # TODO: Define a better schema for phone number formatting/validation, etc.
@@ -26,15 +23,11 @@ class Owner(Resource):
             'delete': {'url': ma.AbsoluteURLFor('owner', object_id='<object_id>'), 'method': 'DELETE'},
         })
 
-        @staticmethod
-        def get_envelope_key(many):
-            return 'owners' if many else 'owner'
+        class Meta:
+            name = 'owner'
+            plural_name = 'owners'
 
-        @post_dump(raw=True)
-        def wrap_with_envelope(self, data, many):
-            key = self.get_envelope_key(many)
-            return {key: data}
-    
+
     def __init__(self):
         self.object_id = None
         self.first_name = None # free form
@@ -51,7 +44,7 @@ class Owner(Resource):
 
     def load(self, owner_id):
         try:
-            owners = Owners.load_from_yaml()
+            owners = load_from_yaml("owners.yaml", Owner)
             return owners[owner_id]
         except IndexError:
             return None
@@ -59,23 +52,9 @@ class Owner(Resource):
 
 class Owners(Resource):
 
-    @staticmethod
-    def load_from_yaml():
-        owners = {}
-        try:
-            with open("owners.yaml", 'r') as stream:
-                for data in yaml.safe_load(stream):
-                    cur_owner = Owner()
-                    for key, value in data.items():
-                        setattr(cur_owner, key, value)
-                    owners[cur_owner.object_id] = cur_owner
-        except OSError:
-            return None
-        return owners
-
     @property
     def owners(self):
-        return Owners.load_from_yaml().values()
+        return load_from_yaml("owners.yaml", Owner).values()
 
     def get(self):
         schema = Owner.ModelView(only=fields_from_request(request), many=True)
