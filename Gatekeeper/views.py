@@ -37,3 +37,16 @@ def about():
         year=datetime.now().year,
         message='Your application description page.'
     )
+
+
+@app.route('/dogs')
+def dog_summary():
+    """Renders the static dog summary page."""
+    return render_template(
+        'dog_summary.html',
+        title='Dogs',
+        year=datetime.now().year,
+        message='Your dog summary page.',
+        static_string='I\'ve got a bad feeling about this...',
+        dogs=[0,1,2,3,4,5,6,7]
+    )

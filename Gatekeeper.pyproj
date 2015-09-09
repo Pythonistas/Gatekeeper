@@ -53,11 +53,14 @@
     <Folder Include="Gatekeeper\static\" />
     <Folder Include="Gatekeeper\static\content\" />
     <Folder Include="Gatekeeper\static\fonts\" />
+    <Folder Include="Gatekeeper\static\images\" />
     <Folder Include="Gatekeeper\static\scripts\" />
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dogs.yaml" />
+    <Content Include="Gatekeeper\static\images\placeholder.png" />
+    <Content Include="Gatekeeper\templates\dog_summary.html" />
     <Content Include="images.yaml" />
     <Content Include="owners.yaml" />
     <Content Include="requirements.txt" />
