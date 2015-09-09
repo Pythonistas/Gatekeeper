@@ -39,7 +39,7 @@ def about():
     )
 
 
-@app.route('/dogs')
+@app.route('/dog_summary')
 def dog_summary():
     """Renders the static dog summary page."""
     return render_template(
