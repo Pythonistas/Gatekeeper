@@ -43,7 +43,7 @@ def about():
 def dog_summary():
     """Renders the static dog summary page."""
     return render_template(
-        'dog_summary.html',
+        'rowdata.html',
         title='Dogs',
         year=datetime.now().year,
         message='Your dog summary page.',

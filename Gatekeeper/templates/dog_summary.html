@@ -1,31 +1,12 @@
 ﻿{% extends "layout.html" %}
 
 {% block content %}
-
-<h2>{{ title }}.</h2>
-<h3>{{ message }}</h3>
-
-<hr />
-
-<div class="row">
-
-    {% for dog in dogs %}
-
-    <div class="col-xs-6 col-md-3 row-padding">
-        <div class="thumbnail">
-            <a href="#">
-                <img src="{{ url_for('static', filename = 'images/placeholder.png') }}">
-            </a>
-            <div class="caption">
-                <h4>Static Text</h4>
-                <p>I've got a bad feeling about this...</p>
-                <p><a href="#" class="btn btn-default" role="button">Details</a></p>
-            </div>
+        <h2>{{ title }}.</h2>
+        <h3>{{ message }}</h3>
+        <hr />
+        <div class="row">
+            {% for dog in dogs %}
+                    {% block myshinydata %}{% endblock myshinydata %}
+            {% endfor %}
         </div>
-    </div>
-
-    {% endfor %}
-
-</div>
-
-{% endblock %}
+{% endblock content %}

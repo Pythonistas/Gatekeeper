@@ -1,0 +1,14 @@
+﻿{% extends "dog_summary.html" %}
+
+{% block myshinydata %}
+            <div class="col-xs-6 col-md-3 row-padding">
+                <div class="thumbnail">
+                    <a href="#"><img src="{{ url_for('static', filename = 'images/placeholder.png') }}"></a>
+                    <div class="caption">
+                        <h4>Static Text</h4>
+                        <p>I've got a bad feeling about this...</p>
+                        <p><a href="#" class="btn btn-default" role="button">Details</a></p>
+                    </div>
+                </div>
+            </div>
+{% endblock myshinydata %}

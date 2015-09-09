@@ -61,6 +61,7 @@
     <Content Include="dogs.yaml" />
     <Content Include="Gatekeeper\static\images\placeholder.png" />
     <Content Include="Gatekeeper\templates\dog_summary.html" />
+    <Content Include="Gatekeeper\templates\rowdata.html" />
     <Content Include="images.yaml" />
     <Content Include="owners.yaml" />
     <Content Include="requirements.txt" />
