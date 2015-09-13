@@ -1,8 +1,9 @@
-﻿from Gatekeeper import app
-from flask import request
+﻿from flask import request
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
 from flask_restful import Resource
+
+from Gatekeeper import app
 from Gatekeeper.model.image import Image
 from Gatekeeper.model.image import Images
 from Gatekeeper.model.namespaced_schema import NamespacedSchema
@@ -37,10 +38,10 @@ class Animal(Resource):
         goodWith = ma.Nested('Good_With', attribute='good_with')
         notes = ma.Str()
         primaryImages = ma.Hyperlinks({
-            'xsmall': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='xsmall'), 'method': 'GET'},
-            'small': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='small'), 'method': 'GET'},
-            'medium': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='medium'), 'method': 'GET'},
-            'large': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='large'), 'method': 'GET'}
+            'xsmall': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='xsmall'), 'method': 'GET'},
+            'small': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='small'), 'method': 'GET'},
+            'medium': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='medium'), 'method': 'GET'},
+            'large': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='large'), 'method': 'GET'}
         })
         metadata = ma.Nested('Metadata')
 
@@ -141,7 +142,5 @@ class Dogs(Resource):
 
 api.add_resource(Dogs, '/dogs/')
 api.add_resource(Dog, '/dogs/<int:object_id>')
-api.add_resource(
-    Dog.Owners, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
-api.add_resource(
-    Dog.Images, '/dogs/<int:object_id>/images', endpoint='dog_images')
+api.add_resource(Dog.Owners, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
+api.add_resource(Dog.Images, '/dogs/<int:object_id>/images', endpoint='dog_images')
