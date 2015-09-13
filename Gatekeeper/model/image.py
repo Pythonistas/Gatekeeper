@@ -1,9 +1,13 @@
-﻿from Gatekeeper import app
-from flask_restful import Resource, Api
-from marshmallow import post_dump
-from flask_marshmallow import Marshmallow
+﻿import yaml
+
 from flask import request
-import yaml
+from flask_marshmallow import Marshmallow
+from flask_restful import Api
+from flask_restful import Resource
+from marshmallow import post_dump
+
+from Gatekeeper import app
+from Gatekeeper.model.util import fields_from_request
 
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
@@ -14,11 +18,6 @@ sizes = {
     'medium': {'x': 32, 'y': 32},
     'large': {'x': 48, 'y': 48},
 }
-
-# Is there a better way to share this code?
-def fields_from_request(request):
-    fields = request.args.get('fields')
-    return fields.split(',') if fields else None
 
 
 class Image(Resource):
@@ -45,10 +44,10 @@ class Image(Resource):
 
     def __init__(self):
         self.object_id = None
-        self.size = None # constrained list
-        self.mime_Type = None # free form
-        self.file_name = None # free form
-        self.file_size = None # free form
+        self.size = None  # constrained list
+        self.mime_Type = None  # free form
+        self.file_name = None  # free form
+        self.file_size = None  # free form
 
     def get(self, object_id):
         instance = self.load(object_id)

@@ -1,4 +1,5 @@
-﻿# Note for Visual Studio: After adding CONFIG_MODE to the environment, need to close and restart Visual Studio for setting to take effect
+﻿# Note for Visual Studio: After adding CONFIG_MODE to the environment,
+# need to close and restart Visual Studio for setting to take effect
 
 
 class Config(object):
@@ -7,13 +8,15 @@ class Config(object):
     DEBUG = False
     TESTING = False
 
+
 class DevelopmentConfig(Config):
     DEBUG = True
+
 
 class TestingConfig(Config):
     TESTING = True
 
-config_dict = {'DEFAULT' : Config, 
-               'DEBUG'   : DevelopmentConfig,
-               'TEST'    : TestingConfig
-            }
+config_dict = {'DEFAULT': Config,
+               'DEBUG': DevelopmentConfig,
+               'TEST': TestingConfig
+               }
