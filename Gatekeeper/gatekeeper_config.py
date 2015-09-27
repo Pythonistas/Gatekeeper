@@ -11,10 +11,13 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SECRET_KEY = 'they killed kenny'
+    DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
 
 
 class TestingConfig(Config):
     TESTING = True
+
 
 config_dict = {'DEFAULT': Config,
                'DEBUG': DevelopmentConfig,
