@@ -40,13 +40,11 @@ def about():
 
 
 @app.route('/dog_summary')
-def dog_summary():
-    """Renders the static dog summary page."""
+def static_dogs():
+    """Renders the dog summary page using client-side templating and static dog data."""
     return render_template(
-        'rowdata.html',
+        'dog_summary.html',
         title='Dogs',
         year=datetime.now().year,
         message='Your dog summary page.',
-        static_string='I\'ve got a bad feeling about this...',
-        dogs=[0,1,2,3,4,5,6,7]
     )

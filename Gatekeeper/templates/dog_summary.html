@@ -1,12 +1,65 @@
 {% extends "layout.html" %}
 
 {% block content %}
-        <h2>{{ title }}.</h2>
-        <h3>{{ message }}</h3>
-        <hr />
-        <div class="row">
-            {% for dog in dogs %}
-                    {% block myshinydata %}{% endblock myshinydata %}
-            {% endfor %}
-        </div>
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+<hr />
+<div class="container-fluid">
+    <div class="row custom-margin-20-neg" id="row">
+    </div>
+</div>
 {% endblock content %}
+
+{% block scripts %}
+    <script type="text/javascript" src="/static/scripts/handlebars-v4.0.2.js"></script>
+    <script type="text/x-handlebars-template" id="dog-template">
+        {% raw %}
+        {{#each dogs}}
+        <div class="col-xs-12 col-sm-6 col-md-3 custom-margin-20">
+            <div class="thumbnail">
+                <div class="caption">
+                    <a href="#"><img height="96" width="96"></a>
+                    <h4>{{name}}</h4>
+                    <p>{{gender}}, {{ageRange}}</p>
+                    <p>{{breed}}</p>
+                    <a href="#" class="btn btn-default" role="button">Details</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {% endraw %}
+    </script>
+    <script type="text/javascript">
+        //$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+        //function my_function() {
+        //    $.ajax({
+        //        url: $SCRIPT_ROOT + '/api/v1/dogs',
+        //        success: function(data) { $('#row').html(template(data)); },
+        //        error: function(xhr, ajaxOptions, thrownError) {}
+        //    })
+        //}
+
+        //$(document).ready(function() {
+        //    my_function();
+        //});
+
+        $(document).ready(function () {
+            // compile our template
+            var template = Handlebars.compile($("#dog-template").html());
+
+            var data = {
+                dogs: [
+                    { ageRange: null, breed: "Rottweiler", gender: "Male", name: "Bruce" },
+                    { ageRange: null, breed: "Poodle", gender: "Female", name: "Fiona" },
+                    { ageRange: "Young", breed: "Imaginary", gender: "Male", name: "Odie" },
+                    { ageRange: "Young", breed: "Direwolf", gender: "Male", name: "Ghost" },
+                    { ageRange: "Adult", breed: "German Shephard", gender: "Male", name: "Rin Tin Tin" },
+                    { ageRange: "Young", breed: "Cairn Terrier", gender: "Male", name: "Toto" }
+                ]
+            };
+
+            $('#row').html(template(data));
+        });
+    </script>
+{% endblock %}

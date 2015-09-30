@@ -41,7 +41,10 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
-.row-padding {
-    padding-top: 15px;
-    padding-bottom: 15px
+.custom-margin-20-neg {
+    margin-top: -20px;
+}
+
+.custom-margin-20 {
+    margin-top: 20px;
 }
