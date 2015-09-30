@@ -1,8 +1,10 @@
 ﻿import yaml
 
+
 def fields_from_request(request):
     fields = request.args.get('fields')
     return fields.split(',') if fields else None
+
 
 def load_from_yaml(input_file, data_class):
     yaml_dict = {}

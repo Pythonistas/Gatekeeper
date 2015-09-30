@@ -1,13 +1,16 @@
-﻿from Gatekeeper import app
-from flask_restful import Resource, Api
+﻿from flask import request
 from flask_marshmallow import Marshmallow
-from flask import request
-from datetime import datetime
+from flask_restful import Api
+from flask_restful import Resource
 
-from Gatekeeper.model.util import fields_from_request, load_from_yaml
+from Gatekeeper import app
+from Gatekeeper.model.image import Image
+from Gatekeeper.model.image import Images
 from Gatekeeper.model.namespaced_schema import NamespacedSchema
-from Gatekeeper.model.image import Image, Images
-from Gatekeeper.model.owner import Owner, Owners
+from Gatekeeper.model.owner import Owner
+from Gatekeeper.model.owner import Owners
+from Gatekeeper.model.util import fields_from_request
+from Gatekeeper.model.util import load_from_yaml
 
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
@@ -15,6 +18,7 @@ ma = Marshmallow(app)
 sizes = ["small", "medium", "large"]
 genders = ["female", "male"]
 statuses = ["unavailable", "available", "foster", "adopted", "tbpd"]
+
 
 class Animal(Resource):
 
@@ -34,10 +38,10 @@ class Animal(Resource):
         goodWith = ma.Nested('Good_With', attribute='good_with')
         notes = ma.Str()
         primaryImages = ma.Hyperlinks({
-            'xsmall': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='xsmall'), 'method': 'GET'},
-            'small': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='small'), 'method': 'GET'},
-            'medium':{'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='medium'), 'method': 'GET'},
-            'large': {'url': ma.AbsoluteURLFor('images', object_id='<image_primary>', size='large'), 'method': 'GET'}
+            'xsmall': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='xsmall'), 'method': 'GET'},
+            'small': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='small'), 'method': 'GET'},
+            'medium': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='medium'), 'method': 'GET'},
+            'large': {'url': ma.AbsoluteURLFor('image', object_id='<image_primary>', size='large'), 'method': 'GET'}
         })
         metadata = ma.Nested('Metadata')
 
@@ -55,23 +59,23 @@ class Animal(Resource):
         self.name = None
         self.birthdate = None
         self.birthdate_exact = False
-        #self.tags = [] # new feature (v2)
-        self.size_range = None # constrained list
-        self.weight = None # free form
-        self.gender = None # constrained list
-        self.status = None # constrained list
-        self.breed = None # free form - populated from data dictionary
-        self.group = None # free form - populated from data dictionary
-        self.color = None # free form - populated from data dictionary
+        # self.tags = [] # new feature (v2)
+        self.size_range = None  # constrained list
+        self.weight = None  # free form
+        self.gender = None  # constrained list
+        self.status = None  # constrained list
+        self.breed = None  # free form - populated from data dictionary
+        self.group = None  # free form - populated from data dictionary
+        self.color = None  # free form - populated from data dictionary
         self.good_with = {
-            'children': False, # bool
-            'dogs': False, # bool
-            'cats': False # bool
-        } 
-        self.owners = [] # list of IDs (FK)
-        self.images = [] # list of IDs (FK)
-        self.image_primary = -1 # ID (FK)
-        self.notes = None # free form
+            'children': False,  # bool
+            'dogs': False,  # bool
+            'cats': False  # bool
+        }
+        self.owners = []  # list of IDs (FK)
+        self.images = []  # list of IDs (FK)
+        self.image_primary = -1  # ID (FK)
+        self.notes = None  # free form
         self.metadata = {
             'created': None,
             'updated': None,
@@ -107,8 +111,8 @@ class Dog(Animal):
 
     def __init__(self):
         super().__init__()
-        self.age_range = None # constrained list
-        self.trained = False # bool
+        self.age_range = None  # constrained list
+        self.trained = False  # bool
 
     class Owners(Resource):
         pass
@@ -122,6 +126,7 @@ class Dog(Animal):
             return dogs[dog_id]
         except IndexError:
             return None
+
 
 class Dogs(Resource):
 
