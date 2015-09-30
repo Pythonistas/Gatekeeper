@@ -2,9 +2,9 @@
 Routes and views for the flask application.
 """
 
+from Gatekeeper import app
 from datetime import datetime
 from flask import render_template
-from Gatekeeper import app
 
 
 @app.route('/')
@@ -16,6 +16,7 @@ def home():
         title='Home Page',
         year=datetime.now().year,
     )
+
 
 @app.route('/contact')
 def contact():
