@@ -32,34 +32,37 @@
     <script type="text/javascript">
         //$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-        //function my_function() {
-        //    $.ajax({
-        //        url: $SCRIPT_ROOT + '/api/v1/dogs',
-        //        success: function(data) { $('#row').html(template(data)); },
-        //        error: function(xhr, ajaxOptions, thrownError) {}
-        //    })
-        //}
+        function my_function() {
+            // compile our template
+            var $template = Handlebars.compile($("#dog-template").html());
 
-        //$(document).ready(function() {
-        //    my_function();
-        //});
+            $.ajax({
+                url: $SCRIPT_ROOT + '/api/v1/dogs',
+                success: function (data) { $('#row').html($template(data)); },
+                error: function (xhr, ajaxOptions, thrownError) { }
+            })
+        }
 
         $(document).ready(function () {
-            // compile our template
-            var template = Handlebars.compile($("#dog-template").html());
-
-            var data = {
-                dogs: [
-                    { ageRange: null, breed: "Rottweiler", gender: "Male", name: "Bruce" },
-                    { ageRange: null, breed: "Poodle", gender: "Female", name: "Fiona" },
-                    { ageRange: "Young", breed: "Imaginary", gender: "Male", name: "Odie" },
-                    { ageRange: "Young", breed: "Direwolf", gender: "Male", name: "Ghost" },
-                    { ageRange: "Adult", breed: "German Shephard", gender: "Male", name: "Rin Tin Tin" },
-                    { ageRange: "Young", breed: "Cairn Terrier", gender: "Male", name: "Toto" }
-                ]
-            };
-
-            $('#row').html(template(data));
+            my_function();
         });
+
+        //$(document).ready(function () {
+        //    // compile our template
+        //    var template = Handlebars.compile($("#dog-template").html());
+        //
+        //    var data = {
+        //        dogs: [
+        //            { ageRange: null, breed: "Rottweiler", gender: "Male", name: "Bruce" },
+        //            { ageRange: null, breed: "Poodle", gender: "Female", name: "Fiona" },
+        //            { ageRange: "Young", breed: "Imaginary", gender: "Male", name: "Odie" },
+        //            { ageRange: "Young", breed: "Direwolf", gender: "Male", name: "Ghost" },
+        //            { ageRange: "Adult", breed: "German Shephard", gender: "Male", name: "Rin Tin Tin" },
+        //            { ageRange: "Young", breed: "Cairn Terrier", gender: "Male", name: "Toto" }
+        //        ]
+        //    };
+        //
+        //    $('#row').html(template(data));
+        //});
     </script>
 {% endblock %}
