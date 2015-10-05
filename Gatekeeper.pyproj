@@ -62,6 +62,7 @@
     <Content Include="Gatekeeper\static\images\placeholder.png" />
     <Content Include="Gatekeeper\static\scripts\handlebars-v4.0.2.js" />
     <Content Include="Gatekeeper\static\scripts\handlebars.runtime-v4.0.2.js" />
+    <Content Include="Gatekeeper\templates\dog_form.html" />
     <Content Include="Gatekeeper\templates\dog_summary.html" />
     <Content Include="images.yaml" />
     <Content Include="owners.yaml" />
