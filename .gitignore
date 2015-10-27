@@ -60,3 +60,5 @@ obj/
 ptvs_virtualenv_proxy.py
 web.config
 web.debug.config
+data/db/
+data/log/
