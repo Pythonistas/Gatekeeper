@@ -143,4 +143,12 @@ class Dogs(Resource):
         data, errors = schema.dump(self.dogs)
         return errors if errors else data
 
+    def post(self):
+        try:
+            if "name" in request.form:
+                return "Creating a dog with name {0} and age {1} via standard form params".format(request.form["name"], request.form["age"])
+            else:
+                return "Creating a dog via json params: {0}".format(request.json)
+        except Exception as e:
+            return str(e)
 

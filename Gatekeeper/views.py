@@ -38,3 +38,8 @@ def about():
         year=datetime.now().year,
         message='Your application description page.'
     )
+
+
+@app.route('/test_post')
+def test_post():
+    return render_template('test_post.html', title="Test")

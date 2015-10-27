@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+$(function() {
+    $("form#form-create").submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/api/v1/dogs',
+            data: $(this).serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+$(function() {
+    $('form#json-create').submit(function(e) {
+        e.preventDefault();
+        console.log(JSON.stringify({'data': $(this).serializeArray()}));
+        $.ajax({
+            url: '/api/v1/dogs',
+            contentType: 'application/json',
+            //dataType: 'json',
+            data: $(this).serializeArray(),
+            //data: JSON.stringify($(this).serializeArray()),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <form class="form" id="form-create" method="post" role="form">
+        <h2>Add a dog via standard form post</h2>
+        <input type="text" name="name" class="form-control" placeholder="Fido" required autofocus>
+        <input type="int" name="age" class="form-control" placeholder="1 year" required>
+        <br/>
+        <button class="btn btn-lg btn-primary" type="submit" id="form-create-button">Add</button>
+    </form>
+</div>
+
+<div class="container">
+    <form class="form" id="json-create" method="post" role="form">
+        <h2>Add a dog via json post</h2>
+        <input type="text" name="name" class="form-control" placeholder="Fido" required autofocus>
+        <input type="int" name="age" class="form-control" placeholder="1 year" required>
+        <br/>
+        <button class="btn btn-lg btn-primary" type="submit" id="json-create-button">Add</button>
+    </form>
+</div>
+
+{% endblock %}
