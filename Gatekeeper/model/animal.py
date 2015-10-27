@@ -93,6 +93,7 @@ class Animal(Resource):
         pass
 
 
+@api.resource('/dogs/<int:object_id>')
 class Dog(Animal):
     ages = ["puppy", "young", "adult", "senior"]
 
@@ -114,9 +115,11 @@ class Dog(Animal):
         self.age_range = None  # constrained list
         self.trained = False  # bool
 
+    @api.resource('/dogs/<int:object_id>/owners', endpoint='dog_owners')
     class Owners(Resource):
         pass
 
+    @api.resource('/dogs/<int:object_id>/images', endpoint='dog_images')
     class Images(Resource):
         pass
 
@@ -128,6 +131,7 @@ class Dog(Animal):
             return None
 
 
+@api.resource('/dogs')
 class Dogs(Resource):
 
     @property
@@ -140,7 +144,3 @@ class Dogs(Resource):
         return errors if errors else data
 
 
-api.add_resource(Dogs, '/dogs/')
-api.add_resource(Dog, '/dogs/<int:object_id>')
-api.add_resource(Dog.Owners, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
-api.add_resource(Dog.Images, '/dogs/<int:object_id>/images', endpoint='dog_images')
