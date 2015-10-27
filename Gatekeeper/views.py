@@ -38,3 +38,14 @@ def about():
         year=datetime.now().year,
         message='Your application description page.'
     )
+
+
+@app.route('/dog_summary')
+def static_dogs():
+    """Renders the dog summary page using client-side templating and static dog data."""
+    return render_template(
+        'dog_summary.html',
+        title='Dogs',
+        year=datetime.now().year,
+        message='Your dog summary page.',
+    )
