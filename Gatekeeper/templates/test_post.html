@@ -11,11 +11,13 @@ $(function() {
         $.ajax({
             url: '/api/v1/dogs',
             data: $(this).serialize(),
-            type: 'POST'
-        }).done(function(response) {
-            console.log(response);
-        }).error(function(error) {
-            console.log(error);
+            type: 'POST',
+            success: function(data, textStatus, jqXHR) {
+                console.log(data + ":" + textStatus);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
         });
     });
 });
@@ -29,10 +31,12 @@ $(function() {
             dataType: 'json',
             data: $(this).serializeJSON(),
             type: 'POST',
-        }).done(function(response) {
-            console.log(response);
-        }).error(function(error) {
-            console.log(error);
+            success: function(data, textStatus, jqXHR) {
+                console.log(data + ":" + textStatus);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
         });
     });
 });
