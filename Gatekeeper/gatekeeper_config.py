@@ -7,6 +7,7 @@ class Config(object):
     PROPAGATE_EXCEPTIONS = True
     DEBUG = False
     TESTING = False
+    ZMQ_PUB_PORT = 5556
 
 
 class DevelopmentConfig(Config):

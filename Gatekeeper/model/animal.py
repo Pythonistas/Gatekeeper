@@ -4,6 +4,7 @@ from flask_restful import Api
 from flask_restful import Resource
 
 from Gatekeeper import app
+from Gatekeeper import zmq
 from Gatekeeper.model.image import Image
 from Gatekeeper.model.image import Images
 from Gatekeeper.model.namespaced_schema import NamespacedSchema
@@ -54,9 +55,16 @@ class Animal(Resource):
             created = ma.DateTime()
             updated = ma.DateTime()
 
-    def __init__(self):
+
+    @classmethod
+    def from_json(self, json_dict):
+        schema = self.ModelView()
+        data, error = schema.load(json_dict)
+        return self(**data), error
+
+    def __init__(self, name=None):
         self.object_id = None
-        self.name = None
+        self.name = name
         self.birthdate = None
         self.birthdate_exact = False
         # self.tags = [] # new feature (v2)
@@ -110,8 +118,9 @@ class Dog(Animal):
             name = 'dog'
             plural_name = 'dogs'
 
-    def __init__(self):
-        super().__init__()
+     
+    def __init__(self, name=None):
+        super().__init__(name)
         self.age_range = None  # constrained list
         self.trained = False  # bool
 
@@ -144,11 +153,13 @@ class Dogs(Resource):
         return errors if errors else data
 
     def post(self):
-        try:
-            if "name" in request.form:
-                return "Creating a dog with name {0} and age {1} via standard form params".format(request.form["name"], request.form["age"])
-            else:
-                return "data:Creating a dog via json params: {0}".format(request.json)
-        except Exception as e:
-            return str(e)
+        dog, errors = Dog.from_json(request.json)
+        if errors:
+            return errors
+
+        dog.object_id = 0  # in a real app we'd have a new ID from the DB
+        dog_json, errors = Dog.ModelView().dump(dog)
+
+        zmq.publish("ANIMAL", "Created a dog named {0}".format(dog.name))
+        return errors if errors else dog_json, 201
 

@@ -33,9 +33,10 @@ $(function() {
             type: 'POST',
             success: function(data, textStatus, jqXHR) {
                 console.log(data + ":" + textStatus);
+                console.log("the new dog's name is: " + data.dog.name);
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
+                console.log(jqXHR.responseText + "|" + textStatus + "|" + errorThrown);
             }
         });
     });
@@ -60,8 +61,8 @@ $(function() {
 <div class="container">
     <form class="form" id="json-create" method="post" role="form">
         <h2>Add a dog via json post</h2>
-        <input type="text" name="name" class="form-control" placeholder="Fido" required autofocus>
-        <input type="int" name="age" class="form-control" placeholder="1 year" required>
+        <input type="text" name="dog[name]" class="form-control" placeholder="Fido" required autofocus>
+        <input type="int" name="dog[age]" class="form-control" placeholder="1 year" required>
         <br/>
         <button class="btn btn-lg btn-primary" type="submit" id="json-create-button">Add</button>
     </form>

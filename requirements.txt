@@ -5,3 +5,4 @@ marshmallow>=2.0.0b4
 flask-marshmallow
 python-dateutil
 flask-debugtoolbar
+pyzmq

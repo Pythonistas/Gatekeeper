@@ -22,3 +22,4 @@ toolbar = DebugToolbarExtension(app)
 
 import Gatekeeper.model.animal
 import Gatekeeper.views
+import Gatekeeper.zmq
