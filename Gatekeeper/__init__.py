@@ -12,7 +12,7 @@ from Gatekeeper import gatekeeper_config
 app = Flask(__name__)
 
 app.config.from_object(
-    gatekeeper_config.config_dict[environ.get('CONFIG_MODE', 'DEFAULT')])
+    gatekeeper_config.config_dict[environ.get('CONFIG_MODE', 'DEBUG')])
 
 # Refresh the log level setting - if we don't do this, the
 # DebugToolbarExtension won't catch any messages.
