@@ -60,3 +60,5 @@ obj/
 ptvs_virtualenv_proxy.py
 web.config
 web.debug.config
+Gatekeeper/gatekeeper.sublime-project
+Gatekeeper/gatekeeper.sublime-workspace
