@@ -60,3 +60,7 @@ obj/
 ptvs_virtualenv_proxy.py
 web.config
 web.debug.config
+
+# MongoDB
+Gatekeeper/data/db/
+Gatekeeper/data/log/

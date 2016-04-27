@@ -10,7 +10,11 @@ from Gatekeeper.model.namespaced_schema import NamespacedSchema
 from Gatekeeper.model.owner import Owner
 from Gatekeeper.model.owner import Owners
 from Gatekeeper.model.util import fields_from_request
-from Gatekeeper.model.util import load_from_yaml
+
+## MONGO DB
+from pymongo import MongoClient
+from bson.objectid import ObjectId as BSON_ObjectId
+
 
 api = Api(app, prefix='/api/v1')
 ma = Marshmallow(app)
@@ -55,7 +59,6 @@ class Animal(Resource):
             updated = ma.DateTime()
 
     def __init__(self):
-        self.object_id = None
         self.name = None
         self.birthdate = None
         self.birthdate_exact = False
@@ -81,7 +84,7 @@ class Animal(Resource):
             'updated': None,
         }
 
-    def get(self, object_id):
+    def internal_get(self, object_id):
         instance = self.load(object_id)
         if instance:
             schema = self.ModelView(only=fields_from_request(request))
@@ -92,7 +95,18 @@ class Animal(Resource):
     def load(self, object_id):
         pass
 
+    @classmethod
+    def new_from_dict(cls, dict):
+        this = cls()
 
+        for key, value in dict.items():
+            setattr(this, key, value)
+
+        return this
+        # TODO: return error if contains unrecognized attributes
+        # TODO: return error if missing required attributes
+
+@api.resource('/dogs/<string:object_id>')
 class Dog(Animal):
     ages = ["puppy", "young", "adult", "senior"]
 
@@ -114,33 +128,58 @@ class Dog(Animal):
         self.age_range = None  # constrained list
         self.trained = False  # bool
 
+    @api.resource('/dogs/<string:object_id>/owners', endpoint='dog_owners')
     class Owners(Resource):
         pass
 
+    @api.resource('/dogs/<string:object_id>/images', endpoint='dog_images')
     class Images(Resource):
         pass
 
-    def load(self, dog_id):
-        try:
-            dogs = load_from_yaml("dogs.yaml", Dog)
-            return dogs[dog_id]
-        except IndexError:
-            return None
+    def get(self, object_id):
+        return self.internal_get(object_id)
+
+    def load(self, object_id):
+
+        ## MONGO DB
+        dogs_collection = app.config['GATEKEEPERDB'].Dogs
+        document = dogs_collection.find_one({ '_id': BSON_ObjectId(object_id) })
+        dog = Dog.new_from_dict(document)
+
+        return dog
+
+    def put(self, object_id):
+
+        ## MONGO DB
+        dogs_collection = app.config['GATEKEEPERDB'].Dogs
+        dog = dogs_collection.update({ '_id': BSON_ObjectId(object_id)}, { '$set': request.json }, multi = False)
+
+        return dog
 
 
+@api.resource('/dogs/')
 class Dogs(Resource):
 
     @property
     def dogs(self):
-        return load_from_yaml("dogs.yaml", Dog).values()
+
+        ## MONGO DB
+        dogs_collection = app.config['GATEKEEPERDB'].Dogs
+        cursor = dogs_collection.find()
+        dogs = [Dog.new_from_dict(document) for document in cursor]
+
+        return dogs
 
     def get(self):
         schema = Dog.ModelView(only=fields_from_request(request), many=True)
         data, errors = schema.dump(self.dogs)
         return errors if errors else data
 
+    def post(self):
 
-api.add_resource(Dogs, '/dogs/')
-api.add_resource(Dog, '/dogs/<int:object_id>')
-api.add_resource(Dog.Owners, '/dogs/<int:object_id>/owners', endpoint='dog_owners')
-api.add_resource(Dog.Images, '/dogs/<int:object_id>/images', endpoint='dog_images')
+        ## MONGO DB
+        dogs_collection = app.config['GATEKEEPERDB'].Dogs
+        # TODO: Create dog instance before attempting to create new record
+        dog_id = dogs_collection.insert(request.json)
+
+        return {'url': api.url_for(Dog, object_id = dog_id, _external = True)}

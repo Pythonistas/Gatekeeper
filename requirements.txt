@@ -1,7 +1,7 @@
-Flask<1
-PyYAML
+Flask>=0.10.1
 Flask-RESTful
 marshmallow>=2.0.0b4
 flask-marshmallow
 python-dateutil
-flask-debugtoolbar
+Flask-DebugToolbar
+pymongo==3.0.3

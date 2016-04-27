@@ -40,8 +40,8 @@ def about():
     )
 
 
-@app.route('/dog_summary')
-def static_dogs():
+@app.route('/dogs/summary')
+def dogs_summary():
     """Renders the dog summary page using client-side templating and static dog data."""
     return render_template(
         'dog_summary.html',

@@ -20,6 +20,7 @@ sizes = {
 }
 
 
+#@api.resource('/images/<int:object_id>/')
 class Image(Resource):
 
     class ModelView(ma.Schema):
@@ -65,6 +66,7 @@ class Image(Resource):
             return None
 
 
+#@api.resource('/images/')
 class Images(Resource):
 
     @staticmethod
