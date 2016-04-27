@@ -55,11 +55,13 @@
     <Folder Include="Gatekeeper\static\fonts\" />
     <Folder Include="Gatekeeper\static\images\" />
     <Folder Include="Gatekeeper\static\scripts\" />
+    <Folder Include="Gatekeeper\static\scripts\angularjs\" />
     <Folder Include="Gatekeeper\templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dogs.yaml" />
     <Content Include="Gatekeeper\static\images\placeholder.png" />
+    <Content Include="Gatekeeper\static\scripts\angularjs\app.js" />
     <Content Include="Gatekeeper\static\scripts\handlebars-v4.0.2.js" />
     <Content Include="Gatekeeper\static\scripts\handlebars.runtime-v4.0.2.js" />
     <Content Include="Gatekeeper\templates\dog_form.html" />
