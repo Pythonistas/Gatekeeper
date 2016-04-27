@@ -11,14 +11,14 @@
 
         facility.dogs = [];
 
-        //$http.get('http://localhost:5555/api/v1/dogs').success(function(data){
+        //$http.get('http://localhost:5555/api/v1/dogs/').success(function(data){
         //    facility.dogs = data.dogs;
         //    console.log(facility.dogs);
         //});
 
         $http({
             method: 'GET',
-            url: 'http://localhost:5555/api/v1/dogs'
+            url: 'http://localhost:5555/api/v1/dogs/'
         }).then(
             function(response) {
                 facility.dogs = response.data.dogs;
@@ -33,7 +33,7 @@
 
         $http({
             method: 'POST',
-            url: 'http://localhost:5555/api/v1/dogs',
+            url: 'http://localhost:5555/api/v1/dogs/',
             data: {}
         }).then(
             // try / successCallback

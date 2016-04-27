@@ -12,7 +12,6 @@
     <script type="text/javascript">
         var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
-
 </head>
 
 <body>
@@ -31,7 +30,7 @@
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     <li><a href="{{ url_for('about') }}">About</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
-                    <li><a href="{{ url_for('static_dogs') }}">Dogs</a></li>
+                    <li><a href="{{ url_for('dogs_summary') }}">Dogs</a></li>
                 </ul>
             </div>
         </div>
