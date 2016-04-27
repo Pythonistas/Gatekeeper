@@ -64,3 +64,6 @@ web.debug.config
 # MongoDB
 Gatekeeper/data/db/
 Gatekeeper/data/log/
+
+Gatekeeper/gatekeeper.sublime-project
+Gatekeeper/gatekeeper.sublime-workspace

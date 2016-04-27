@@ -1,10 +1,10 @@
 ﻿import yaml
 
+from Gatekeeper.model.namespaced_schema import NamespacedSchema
 from flask import request
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
 from flask_restful import Resource
-from marshmallow import post_dump
 
 from Gatekeeper import app
 from Gatekeeper.model.util import fields_from_request
@@ -23,7 +23,7 @@ sizes = {
 #@api.resource('/images/<int:object_id>/')
 class Image(Resource):
 
-    class ModelView(ma.Schema):
+    class ModelView(NamespacedSchema):
         size = ma.Str()
         mime_Type = ma.Str()
         file_name = ma.Str()
@@ -34,14 +34,9 @@ class Image(Resource):
             'delete': {'url': ma.AbsoluteURLFor('image', object_id='<object_id>'), 'method': 'DELETE'},
         })
 
-        @staticmethod
-        def get_envelope_key(many):
-            return 'images' if many else 'image'
-
-        @post_dump(raw=True)
-        def wrap_with_envelope(self, data, many):
-            key = self.get_envelope_key(many)
-            return {key: data}
+        class Meta:
+            name = 'image'
+            plural_name = 'images'
 
     def __init__(self):
         self.object_id = None

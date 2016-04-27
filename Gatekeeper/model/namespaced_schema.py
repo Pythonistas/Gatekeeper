@@ -23,12 +23,12 @@ class NamespaceOpts(SchemaOpts):
 class NamespacedSchema(ma.Schema):
     OPTIONS_CLASS = NamespaceOpts
 
-    @pre_load(raw=True)
+    @pre_load(pass_many=True)
     def unwrap_envelope(self, data, many):
         key = self.opts.plural_name if many else self.opts.name
         return data[key]
 
-    @post_dump(raw=True)
+    @post_dump(pass_many=True)
     def wrap_with_envelope(self, data, many):
         key = self.opts.plural_name if many else self.opts.name
         return {key: data}
