@@ -60,3 +60,13 @@ def dogs_new():
         year=datetime.now().year,
         message='Your new dog entry form.',
     )
+
+@app.route('/dogs/new2')
+def dogs_new2():
+    """Renders the simplified new dog form."""
+    return render_template(
+        'dog_form2.html',
+        title='Dogs',
+        year=datetime.now().year,
+        message='Your new dog entry form.',
+    )

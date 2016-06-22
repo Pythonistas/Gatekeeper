@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>{{ title }}.</h2>
+<h3>{{ message }}</h3>
+<hr />
+<div class="row col-lg-12" ng-controller="DogsController">
+    <div class="well col-lg-6">
+        <form class="form-horizontal" id="new-dog" role="form" ng-submit="submit()" ng-controller="NewDogFormController">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="name">Name:</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" id="id-form-name" name="name" placeholder="Full name" ng-model="dog.name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="gender">Gender:</label>
+                <div class="input-group col-sm-10">
+                    <div class="radio">
+                        <label><input type="radio" name="gender" value="male" ng-model="dog.gender">Male</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="gender" value="female" ng-model="dog.gender">Female</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="breed">Breed:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="breed" id="id-form-breed">
+                        <option value="" disabled selected style='display:none;'>Select a breed</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" ng-controller="DogTypesController">
+                <label class="control-label col-sm-2" for="breed">Group:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="group" id="id-form-breed" ng-model="dog.group">
+                        <option value="" disabled selected style='display:none;'>Select a group</option>
+                        <option ng-repeat="dog_type in dog_types">{- dog_type.type -}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn">Reset</button>
+                </div>
+            </div>
+        </form>
+        <hr />
+        <pre>{- dogs[0] | json -}</pre>
+    </div>
+    <div class="col-lg-6">
+        <div ng-repeat="dog in dogs">
+            <h4>{- dog.name -}</h4>
+            <div class="dogs-content">
+                <p><strong>Breed</strong>: {- dog.breed -}</p>
+                <p><strong>Color</strong>: {- dog.color -}</p>
+                <p><strong>Gender</strong>: {- dog.gender -}</p>
+                <p><strong>Notes</strong>: {- dog.notes -}</p>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

@@ -28,7 +28,7 @@ class NamespacedSchema(ma.Schema):
         key = self.opts.plural_name if many else self.opts.name
         return data[key]
 
-    @post_dump(pass_many=True)
-    def wrap_with_envelope(self, data, many):
-        key = self.opts.plural_name if many else self.opts.name
-        return {key: data}
+    #@post_dump(pass_many=True)
+    #def wrap_with_envelope(self, data, many):
+    #    key = self.opts.plural_name if many else self.opts.name
+    #    return {key: data}

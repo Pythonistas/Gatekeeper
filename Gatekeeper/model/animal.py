@@ -11,6 +11,8 @@ from Gatekeeper.model.owner import Owner
 from Gatekeeper.model.owner import Owners
 from Gatekeeper.model.util import fields_from_request
 
+import json
+
 ## MONGO DB
 from pymongo import MongoClient
 from bson.objectid import ObjectId as BSON_ObjectId
@@ -106,18 +108,19 @@ class Animal(Resource):
         # TODO: return error if contains unrecognized attributes
         # TODO: return error if missing required attributes
 
+
 @api.resource('/dogs/<string:object_id>')
 class Dog(Animal):
     ages = ["puppy", "young", "adult", "senior"]
 
     class ModelView(Animal.ModelView):
-        links = ma.Hyperlinks({
-            'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'GET'},
-            'update': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'PUT'},
-            'delete': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'DELETE'},
-            'owners': {'url': ma.AbsoluteURLFor('dog_owners', object_id='<object_id>'), 'method': 'GET'},
-            'images': {'url': ma.AbsoluteURLFor('dog_images', object_id='<object_id>'), 'method': 'GET'}
-        })
+        #links = ma.Hyperlinks({
+        #    'self': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'GET'},
+        #    'update': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'PUT'},
+        #    'delete': {'url': ma.AbsoluteURLFor('dog', object_id='<object_id>'), 'method': 'DELETE'},
+        #    'owners': {'url': ma.AbsoluteURLFor('dog_owners', object_id='<object_id>'), 'method': 'GET'},
+        #    'images': {'url': ma.AbsoluteURLFor('dog_images', object_id='<object_id>'), 'method': 'GET'}
+        #})
 
         class Meta:
             name = 'dog'
@@ -156,6 +159,17 @@ class Dog(Animal):
 
         return dog
 
+    def delete(self, object_id):
+
+        ## MONGO DB
+        dogs_collection = app.config['GATEKEEPERDB'].Dogs
+        delete_result = dogs_collection.delete_one({ '_id': BSON_ObjectId(object_id) })
+
+        if delete_result.deleted_count:
+            return {'count': deleted_count}
+        else:
+            return {'error': delete_result.raw_result}
+
 
 @api.resource('/dogs/')
 class Dogs(Resource):
@@ -177,9 +191,103 @@ class Dogs(Resource):
 
     def post(self):
 
-        ## MONGO DB
-        dogs_collection = app.config['GATEKEEPERDB'].Dogs
-        # TODO: Create dog instance before attempting to create new record
-        dog_id = dogs_collection.insert(request.json)
+        schema = Dog.ModelView()
+        data, errors = schema.load(request.get_json())
 
-        return {'url': api.url_for(Dog, object_id = dog_id, _external = True)}
+        if errors:
+            return errors
+        else:
+            ## MONGO DB
+            dogs_collection = app.config['GATEKEEPERDB'].Dogs
+
+            insert_result = dogs_collection.insert_one(data)
+            return {'url': api.url_for(Dog, object_id = insert_result.inserted_id, _external = True)}
+
+
+class AnimalTypes(Resource):
+
+    class ModelView(NamespacedSchema):
+        animal = ma.Str()
+        type = ma.Str()
+
+    def __init__(self):
+        self.animal = None
+        self.type = None
+
+    def internal_get(self):
+        instance = self.load(object_id)
+        if instance:
+            schema = self.ModelView(only=fields_from_request(request))
+            data, errors = schema.dump(instance)
+            return errors if errors else data
+        # TODO: return error object if nothing could be loaded
+
+    def load(self):
+        pass
+
+    @classmethod
+    def new_from_dict(cls, dict):
+        this = cls()
+
+        for key, value in dict.items():
+            setattr(this, key, value)
+
+        return this
+        # TODO: return error if contains unrecognized attributes
+        # TODO: return error if missing required attributes
+
+@api.resource('/types/dogs/')
+class DogTypes(AnimalTypes):
+
+    @property
+    def dog_types(self):
+
+        ## MONGO DB
+        types_collection = app.config['GATEKEEPERDB'].Types
+        cursor = types_collection.find( { 'animal': 'Dog' } ).sort( [( 'type', 1 )] )
+        dog_types = [AnimalTypes.new_from_dict(document) for document in cursor]
+
+        return dog_types
+
+    def get(self):
+        schema = AnimalTypes.ModelView(only=fields_from_request(request), many=True)
+        data, errors = schema.dump(self.dog_types)
+        return errors if errors else data
+
+@api.resource('/types/<string:type>')
+class SpecificType(Resource):
+    pass
+
+@api.resource('/types/')
+class AllTypes(Resource):
+    
+    class ModelView(NamespacedSchema):
+        animal = ma.Str()
+
+    def __init__(self):
+        animal = None
+
+    def get(self):
+        schema = self.ModelView(many=True)
+        data, errors = schema.dump(self.load())
+        return errors if errors else data
+
+    def load(self):
+        
+        ## MONGO DB
+        types_collection = app.config['GATEKEEPERDB'].Types
+        cursor = types_collection.find().distinct( 'animal' )
+        all_types = [self.new_from_dict(document) for document in cursor]
+
+        return all_types
+
+    @classmethod
+    def new_from_dict(cls, dict):
+        this = cls()
+
+        for key, value in dict.items():
+            setattr(this, key, value)
+
+        return this
+        # TODO: return error if contains unrecognized attributes
+        # TODO: return error if missing required attributes

@@ -88,4 +88,4 @@ class Images(Resource):
         return errors if errors else data
 
 api.add_resource(Images, '/images/')
-api.add_resource(Image, '/images/<int:object_id>/')
+api.add_resource(Image, '/images/<string:object_id>/')
