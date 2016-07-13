@@ -13,8 +13,113 @@
 
     app.controller('DogTypesController', ['$scope', 'DogTypes', function ($scope, DogTypes) {
         $scope.dog_types = DogTypes.query();
-        console.log($scope.dog_types);  // [DEBUG-ONLY]
+        //console.log($scope.dog_types);  // [DEBUG-ONLY]
     }]);
+
+
+    // --'Experimental' Dogs--
+    app.service('exService', function ($http, $q) {
+
+        // Return public API.
+        return({
+            getDogs: getDogs,
+            addDog: addDog,
+            //removeDog: removeDog,
+        });
+
+        function getDogs() {
+            var request = $http({
+                method: "get",
+                url: 'http://localhost:5555/api/v1/dogs/',
+            });
+
+            return (request.then(handleSuccess, handleError));
+        }
+
+        function addDog( name ) {
+            var request = $http({
+                method: "post",
+                url: 'http://localhost:5555/api/v1/dogs/',
+                data: {
+                    "dog": {
+                        "name": name
+                    }
+                }
+            });
+
+            return (request.then(handleSuccess, handleError));
+        }
+
+        //function removeDog( id ) {
+        //    var request = $http({
+        //        method: "delete",
+        //        url: 'http://localhost:5555/api/v1/dogs/' + id,
+        //    })
+        //}
+
+        function handleError(response) {
+            // The API response from the server should be returned in a
+            // nomralized format. However, if the request was not handled by the
+            // server (or what not handles properly - ex. server error), then we
+            // may have to normalize it on our end, as best we can.
+            if (
+                !angular.isObject(response.data) ||
+                !response.data.message
+                ) {
+                return ($q.reject("An unknown error occurred."));
+            }
+            // Otherwise, use expected error message.
+            return ($q.reject(response.data.message));
+        }
+
+        // I transform the successful response, unwrapping the application data
+        // from the API response payload.
+        function handleSuccess(response) {
+            return (response.data);
+        }
+    });
+
+    app.controller('exController', function ($scope, exService) {
+        $scope.dogs = [];
+
+        $scope.form = {
+            name: "",
+        };
+
+        loadRemoteData();
+
+        // --Public--
+        $scope.addDog = function () {
+            exService.addDog($scope.form.name)
+            .then(
+                loadRemoteData, function (errorMessage) {
+                    console.warn(errorMessage);
+                }
+            );
+
+            // Reset the form once values have been consumed.
+            $scope.form.name = "";
+        };
+
+        //$scope.removeDog = function (dog) {
+        //    exService.removeDog($scope.dog.id)
+        //    .then(loadRemoteData);
+        //};
+
+        // --Private--
+        function loadRemoteData() {
+            exService.getDogs()
+            .then(
+                function (dogs) {
+                    applyRemoteData(dogs);
+                }
+            )
+        };
+
+        function applyRemoteData(newDogs) {
+            $scope.dogs = newDogs;
+        };
+    });
 
     // --Dogs--
     app.factory('Dogs', function ($resource) {
@@ -24,13 +129,6 @@
     app.controller('DogsController', ['$scope', 'Dogs', function ($scope, Dogs) {
         $scope.dogs = Dogs.query();
         //console.log($scope.dogs);  // [DEBUG-ONLY]
-    }]);
-
-    // --Dog--
-    app.controller('DogController', ['$scope', function ($scope) {
-        //$scope.name = null;
-        //$scope.gender = null;
-        //$scope.group = null;
     }]);
 
     // --Form--
